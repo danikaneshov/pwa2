@@ -92,4 +92,376 @@
 
             <div id="home-tracker" class="tracker-card">
                 <div style="font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: 10px;">АКТИВНЫЙ ЗАКАЗ</div>
-                <div style="font-family: var(--font-vandal); font-
+                <div style="font-family: var(--font-vandal); font-size: 2rem; margin-bottom: 20px;" id="tracker-tariff">...</div>
+                <div class="tracker-status" id="tracker-status-text">ОБРАБОТКА...</div>
+                <button class="btn btn-outline" id="btn-cancel-order" onclick="cancelOrder()" style="display: none;">ОТМЕНИТЬ ЗАКАЗ</button>
+            </div>
+        </div>
+
+        <div id="tab-store" class="tab-pane">
+            <h2 class="section-title">АРСЕНАЛ</h2>
+            
+            <div class="app-card">
+                <div class="app-card-header">
+                    <span class="app-card-title">SOLO</span>
+                    <div class="price-wrapper">
+                        <span class="discount-badge" id="badge-solo">СКИДКА</span>
+                        <span class="old-price" id="old-price-solo">7 000 ₸</span>
+                        <span class="app-card-price" id="price-solo" data-base="7000">7 000 ₸</span>
+                    </div>
+                </div>
+                <p class="app-card-desc">Отличный выбор для одного или в паре.</p>
+                <p class="app-card-kit">1 аппарат, 1 забивка, 4 угля, плитка, щипцы.</p>
+                <button class="btn btn-black" onclick="openOrderModal('SOLO', 7000)">НАСТРОИТЬ ЗАКАЗ</button>
+            </div>
+
+            <div class="app-card">
+                <div class="app-card-header">
+                    <span class="app-card-title">DOUBLE</span>
+                    <div class="price-wrapper">
+                        <span class="discount-badge" id="badge-double">СКИДКА</span>
+                        <span class="old-price" id="old-price-double">9 000 ₸</span>
+                        <span class="app-card-price" id="price-double" data-base="9000">9 000 ₸</span>
+                    </div>
+                </div>
+                <p class="app-card-desc">Две забивки — выгоднее, чем докупать!</p>
+                <p class="app-card-kit">1 аппарат, 2 забивки, 8 углей, плитка, щипцы.</p>
+                <button class="btn btn-red" onclick="openOrderModal('DOUBLE', 9000)">НАСТРОИТЬ ЗАКАЗ</button>
+            </div>
+
+            <div class="app-card">
+                <div class="app-card-header">
+                    <span class="app-card-title">COMPANY</span>
+                    <div class="price-wrapper">
+                        <span class="discount-badge" id="badge-company">СКИДКА</span>
+                        <span class="old-price" id="old-price-company">16 000 ₸</span>
+                        <span class="app-card-price" id="price-company" data-base="16000">16 000 ₸</span>
+                    </div>
+                </div>
+                <p class="app-card-desc">Идеально для тусовки с друзьями.</p>
+                <p class="app-card-kit">2 аппарата, 4 забивки, 16 углей, 2 плитки.</p>
+                <button class="btn btn-cyan" onclick="openOrderModal('COMPANY', 16000)">НАСТРОИТЬ ЗАКАЗ</button>
+            </div>
+        </div>
+
+        <div id="tab-profile" class="tab-pane">
+            <div id="view-login" class="auth-box">
+                <h2 class="section-title">ВХОД</h2>
+                <input type="tel" class="modal-input" id="login-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
+                <input type="password" class="modal-input" id="login-pass" placeholder="Пароль" style="text-align: center;">
+                <button class="btn btn-red" onclick="login()">ВОЙТИ</button>
+                <div class="auth-switch" onclick="toggleAuth('register')">Создать аккаунт</div>
+            </div>
+
+            <div id="view-register" class="auth-box" style="display: none;">
+                <h2 class="section-title">РЕГИСТРАЦИЯ</h2>
+                <input type="tel" class="modal-input" id="reg-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
+                <input type="password" class="modal-input" id="reg-pass" placeholder="Придумай пароль" style="text-align: center;">
+                <button class="btn btn-black" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                <div class="auth-switch" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</div>
+            </div>
+
+            <div id="view-profile" style="display: none;">
+                <h2 class="section-title">ПРОФИЛЬ</h2>
+                <div class="app-card" style="background: var(--black); color: white;">
+                    <p style="font-weight: 800; color: #aaa; font-size: 0.9rem;">Твой номер</p>
+                    <div style="font-family: var(--font-vandal); font-size: 2rem; color: var(--cyan);" id="profile-phone">...</div>
+                    
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px dashed #444;">
+                        <p style="font-weight: 800; color: #aaa; font-size: 0.9rem;">СИСТЕМА ЛОЯЛЬНОСТИ</p>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;">
+                            <span style="font-size: 1.2rem; font-weight: 900;" id="profile-spent">0 ₸</span>
+                            <span style="font-size: 1.2rem; font-weight: 900; color: var(--red); font-family: var(--font-body);" id="profile-discount-text">0% СКИДКА</span>
+                        </div>
+                        <div class="loyalty-progress-bg">
+                            <div class="loyalty-progress-fill" id="loyalty-bar"></div>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #888; margin-top: 5px; font-weight: 700;" id="loyalty-next">До следующей скидки: 75 000 ₸</p>
+                    </div>
+                </div>
+                <button class="btn btn-outline" style="border-color: #ccc; color: var(--black);" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="order-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">НАСТРОЙКА</h2>
+            <div class="modal-subtitle" id="modal-tariff-name">...</div>
+            <label class="modal-label">КРЕПОСТЬ (0-10)</label>
+            <input type="range" min="0" max="10" value="5" class="range-slider" id="strength-slider">
+            <div class="strength-text" id="strength-display">СРЕДНИЙ</div>
+            <label class="modal-label">ВКУСОВЫЕ ПРЕДПОЧТЕНИЯ</label>
+            <input type="text" class="modal-input" id="flavor-input" placeholder="Ягодный, Цитрус, Выпечка...">
+            <label class="modal-label">ХОЛОДОК</label>
+            <div class="ice-toggle">
+                <div class="ice-btn active" onclick="setIce(true)" id="ice-yes">ДА</div>
+                <div class="ice-btn" onclick="setIce(false)" id="ice-no">НЕТ</div>
+            </div>
+            <label class="modal-label">АДРЕС И КОММЕНТАРИЙ</label>
+            <textarea class="modal-input" id="comment-input" rows="3" placeholder="Куда везти? Номер домофона?"></textarea>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn btn-black" style="flex: 1;" onclick="closeOrderModal()">ОТМЕНА</button>
+                <button class="btn btn-red" style="flex: 2;" id="submit-btn" onclick="submitOrder()">ЗАКАЗАТЬ (<span id="modal-final-price"></span> ₸)</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Главная</span></div>
+        <div class="nav-item" id="nav-store" onclick="switchTab('tab-store')"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg><span>Каталог</span></div>
+        <div class="nav-item" id="nav-profile" onclick="switchTab('tab-profile')"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span id="nav-profile-text">Вход</span></div>
+    </nav>
+
+    <script type="module">
+        // Очистка старых Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) { registration.unregister(); }
+            });
+        }
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0",
+            authDomain: "damdymdb.firebaseapp.com",
+            projectId: "damdymdb",
+            storageBucket: "damdymdb.firebasestorage.app",
+            messagingSenderId: "43924470905",
+            appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentUserPhone = localStorage.getItem('damdym_phone') || null;
+        let currentUserData = null;
+        let activeOrderUnsubscribe = null;
+        let userCurrentDiscount = 0;
+
+        const discountTiers = [
+            { limit: 1000000, percent: 20 },
+            { limit: 600000, percent: 15 },
+            { limit: 400000, percent: 10 },
+            { limit: 250000, percent: 7 },
+            { limit: 150000, percent: 5 },
+            { limit: 75000, percent: 3 },
+            { limit: 0, percent: 0 }
+        ];
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('nav-' + tabId.split('-')[1]).classList.add('active');
+        };
+
+        window.toggleAuth = function(type) {
+            document.getElementById('view-login').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('view-register').style.display = type === 'register' ? 'block' : 'none';
+        };
+
+        window.register = async function() {
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            if(phone.length < 5 || pass.length < 3) return alert('Введи данные!');
+
+            try {
+                const userRef = doc(db, "users", phone);
+                if ((await getDoc(userRef)).exists()) return alert('Номер уже в системе!');
+
+                const newUserData = { password: pass, activeOrderId: null, totalSpent: 0 };
+                await setDoc(userRef, newUserData);
+                
+                currentUserPhone = phone; currentUserData = newUserData;
+                localStorage.setItem('damdym_phone', phone);
+                updateUI(); switchTab('tab-store');
+            } catch (e) { alert("Ошибка сети"); }
+        };
+
+        window.login = async function() {
+            const phone = document.getElementById('login-phone').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+            try {
+                const docSnap = await getDoc(doc(db, "users", phone));
+                if (!docSnap.exists() || docSnap.data().password !== pass) return alert('Неверный логин/пароль!');
+
+                currentUserPhone = phone; currentUserData = docSnap.data();
+                localStorage.setItem('damdym_phone', phone);
+                updateUI(); switchTab('tab-store');
+            } catch (e) { alert("Ошибка входа"); }
+        };
+
+        window.logout = function() {
+            currentUserPhone = null; currentUserData = null; userCurrentDiscount = 0;
+            if(activeOrderUnsubscribe) activeOrderUnsubscribe();
+            localStorage.removeItem('damdym_phone');
+            updateUI(); switchTab('tab-profile');
+        };
+
+        let currentOrderTariff = "", currentOrderBasePrice = 0, currentOrderFinalPrice = 0, hasIce = true;
+        const strengthLabels = { 0:"ЛЕГКИЙ (0)", 1:"ЛЕГКИЙ (1)", 2:"ЛЕГКИЙ (2)", 3:"НИЖЕ СРЕДНЕГО", 4:"НИЖЕ СРЕДНЕГО", 5:"СРЕДНИЙ", 6:"СРЕДНИЙ", 7:"ВЫШЕ СРЕДНЕГО", 8:"ВЫШЕ СРЕДНЕГО", 9:"КРЕПКИЙ", 10:"КРЕПКИЙ" };
+
+        document.getElementById('strength-slider').addEventListener('input', e => document.getElementById('strength-display').innerText = strengthLabels[e.target.value]);
+        window.setIce = function(val) { hasIce = val; document.getElementById('ice-yes').classList.toggle('active', val); document.getElementById('ice-no').classList.toggle('active', !val); };
+
+        window.openOrderModal = function(tariff, basePrice) {
+            if (!currentUserPhone) return alert('Сначала войди в профиль!'), switchTab('tab-profile');
+            if (currentUserData && currentUserData.activeOrderId) return alert('У тебя уже есть активный заказ!');
+            
+            currentOrderTariff = tariff; 
+            currentOrderBasePrice = basePrice;
+            currentOrderFinalPrice = Math.floor(basePrice - (basePrice * (userCurrentDiscount / 100)));
+            
+            document.getElementById('modal-tariff-name').innerText = tariff;
+            document.getElementById('modal-final-price').innerText = currentOrderFinalPrice;
+            document.getElementById('order-modal').style.display = 'flex';
+        };
+        window.closeOrderModal = function() { document.getElementById('order-modal').style.display = 'none'; };
+
+        window.submitOrder = async function() {
+            const comment = document.getElementById('comment-input').value.trim();
+            if (!comment) return alert("Напиши адрес!");
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+
+            try {
+                const docRef = await addDoc(collection(db, "orders"), {
+                    phone: currentUserPhone, tariff: currentOrderTariff,
+                    price: currentOrderFinalPrice,
+                    strength: strengthLabels[document.getElementById('strength-slider').value],
+                    flavor: document.getElementById('flavor-input').value || "На усмотрение",
+                    ice: hasIce ? "Да" : "Нет", comment: comment, status: "new", createdAt: Date.now()
+                });
+
+                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: docRef.id });
+                currentUserData.activeOrderId = docRef.id;
+
+                closeOrderModal(); updateUI(); switchTab('tab-home');
+            } catch(e) { alert("Ошибка заказа"); }
+            finally { submitBtn.disabled = false; }
+        };
+
+        window.cancelOrder = async function() {
+            if(confirm("Точно отменить?")) {
+                await updateDoc(doc(db, "orders", currentUserData.activeOrderId), { status: "canceled_client" });
+                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: null });
+                currentUserData.activeOrderId = null; updateUI();
+            }
+        };
+
+        function listenToOrder() {
+            if(activeOrderUnsubscribe) activeOrderUnsubscribe();
+            if(currentUserData && currentUserData.activeOrderId) {
+                activeOrderUnsubscribe = onSnapshot(doc(db, "orders", currentUserData.activeOrderId), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const order = docSnap.data();
+                        const statusBox = document.getElementById('tracker-status-text');
+                        const cancelBtn = document.getElementById('btn-cancel-order');
+                        
+                        document.getElementById('tracker-tariff').innerText = order.tariff;
+                        cancelBtn.style.display = (order.status === 'new') ? "block" : "none";
+
+                        const sMap = {'new':'ОБРАБОТКА...','accepted':'ПРИНЯТ В РАБОТУ','assembly':'СОБИРАЕМ АППАРАТ','courier':'КУРЬЕР В ПУТИ 🚗','done':'ВЫДАН ✅','canceled_client':'ОТМЕНЕН ❌', 'canceled_admin':'ОТМЕНЕН АДМИНОМ ❌'};
+                        statusBox.innerText = sMap[order.status] || order.status;
+                        statusBox.style.color = (order.status === 'done') ? "green" : (order.status.includes('cancel') ? "var(--red)" : "var(--black)");
+
+                        if(['done', 'canceled_client', 'canceled_admin'].includes(order.status)) {
+                            setTimeout(async () => {
+                                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: null });
+                                currentUserData.activeOrderId = null;
+                                if(order.status === 'done') {
+                                    const snap = await getDoc(doc(db, "users", currentUserPhone));
+                                    if(snap.exists()) currentUserData = snap.data();
+                                }
+                                updateUI();
+                            }, 5000);
+                        }
+                    }
+                });
+            }
+        }
+
+        async function updateUI() {
+            if(currentUserPhone) {
+                if(!currentUserData) {
+                    const snap = await getDoc(doc(db, "users", currentUserPhone));
+                    if(snap.exists()) currentUserData = snap.data();
+                }
+
+                document.getElementById('nav-profile-text').innerText = 'Профиль';
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('view-register').style.display = 'none';
+                document.getElementById('view-profile').style.display = 'block';
+                
+                document.getElementById('profile-phone').innerText = currentUserPhone;
+                
+                // РАСЧЕТ СКИДКИ
+                const spent = currentUserData.totalSpent || 0;
+                document.getElementById('profile-spent').innerText = spent.toLocaleString() + ' ₸';
+                
+                let currentTier = discountTiers.find(t => spent >= t.limit);
+                userCurrentDiscount = currentTier.percent;
+                
+                document.getElementById('profile-discount-text').innerText = userCurrentDiscount + '% СКИДКА';
+
+                let nextTier = [...discountTiers].reverse().find(t => t.limit > spent);
+                if (nextTier) {
+                    let prevLimit = currentTier.limit;
+                    let progress = ((spent - prevLimit) / (nextTier.limit - prevLimit)) * 100;
+                    document.getElementById('loyalty-bar').style.width = `${progress}%`;
+                    document.getElementById('loyalty-next').innerText = `До скидки ${nextTier.percent}% осталось ${ (nextTier.limit - spent).toLocaleString() } ₸`;
+                } else {
+                    document.getElementById('loyalty-bar').style.width = `100%`;
+                    document.getElementById('loyalty-next').innerText = `Максимальный уровень достигнут!`;
+                }
+
+                // ОБНОВЛЕНИЕ ПРАЙСА
+                ['solo', 'double', 'company'].forEach(item => {
+                    const basePrice = parseInt(document.getElementById(`price-${item}`).getAttribute('data-base'));
+                    const finalPrice = Math.floor(basePrice - (basePrice * (userCurrentDiscount / 100)));
+                    
+                    document.getElementById(`price-${item}`).innerText = finalPrice.toLocaleString() + ' ₸';
+                    
+                    if(userCurrentDiscount > 0) {
+                        document.getElementById(`old-price-${item}`).style.display = 'block';
+                        document.getElementById(`badge-${item}`).style.display = 'inline-block';
+                        document.getElementById(`badge-${item}`).innerText = `СКИДКА ${userCurrentDiscount}%`;
+                    } else {
+                        document.getElementById(`old-price-${item}`).style.display = 'none';
+                        document.getElementById(`badge-${item}`).style.display = 'none';
+                    }
+                });
+
+                if (currentUserData && currentUserData.activeOrderId) {
+                    document.getElementById('home-empty').style.display = 'none';
+                    document.getElementById('home-tracker').style.display = 'block';
+                    listenToOrder();
+                } else {
+                    document.getElementById('home-empty').style.display = 'block';
+                    document.getElementById('home-tracker').style.display = 'none';
+                }
+            } else {
+                document.getElementById('nav-profile-text').innerText = 'Вход';
+                document.getElementById('view-login').style.display = 'block';
+                document.getElementById('view-register').style.display = 'none';
+                document.getElementById('view-profile').style.display = 'none';
+                document.getElementById('home-empty').style.display = 'block';
+                document.getElementById('home-tracker').style.display = 'none';
+                
+                ['solo', 'double', 'company'].forEach(item => {
+                    const basePrice = parseInt(document.getElementById(`price-${item}`).getAttribute('data-base'));
+                    document.getElementById(`price-${item}`).innerText = basePrice.toLocaleString() + ' ₸';
+                    document.getElementById(`old-price-${item}`).style.display = 'none';
+                    document.getElementById(`badge-${item}`).style.display = 'none';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => { if(currentUserPhone) updateUI(); });
+    </script>
+</body>
+</html>
