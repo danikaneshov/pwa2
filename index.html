@@ -22,10 +22,10 @@
         .btn-black { background: var(--text-main); color: var(--bg-main); }
         .btn-outline { background: transparent; color: var(--red); border-color: var(--red); box-shadow: none; margin-top: 15px; }
 
-        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border-bottom: 2px solid var(--border-color); padding-top: calc(15px + env(safe-area-inset-top)); }
+        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border-bottom: 2px solid var(--border-color); padding-top: calc(15px + env(safe-area-inset-top)); transition: 0.3s; }
         .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--text-main); }
         .header-controls { display: flex; gap: 15px; align-items: center; }
-        .theme-toggle { font-size: 1.5rem; cursor: pointer; }
+        .theme-toggle { cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-main); }
         .status-badge { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.8rem; background: var(--text-main); color: var(--bg-main); padding: 6px 12px; border-radius: 20px; }
         .pulse-dot { display: inline-block; width: 8px; height: 8px; background-color: #00ff00; border-radius: 50%; animation: blinker 1.5s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
@@ -38,7 +38,7 @@
         
         .section-title { font-weight: 900; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; color: var(--text-main); }
         
-        .app-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 20px; margin-bottom: 20px; border-radius: 16px; }
+        .app-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 20px; margin-bottom: 20px; border-radius: 16px; transition: 0.3s;}
         .app-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .app-card-title { font-family: var(--font-vandal); font-size: 2.2rem; }
         .app-card-price { font-family: var(--font-body); font-weight: 900; font-size: 1.5rem; color: var(--red); text-align: right; }
@@ -47,7 +47,7 @@
         
         .price-wrapper { display: flex; flex-direction: column; align-items: flex-end; }
         .old-price { font-family: var(--font-body); font-size: 1rem; color: var(--text-muted); text-decoration: line-through; font-weight: 900; display: none; }
-        .discount-badge { font-family: var(--font-body); background: var(--cyan); color: #121212; font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none;}
+        .discount-badge { font-family: var(--font-body); background: var(--cyan); color: #121212; font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none; text-transform: uppercase;}
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
         .modal-content { background: var(--bg-card); width: 100%; max-width: 600px; border-top: 4px solid var(--border-color); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
@@ -79,7 +79,7 @@
         .loyalty-progress-bg { background: var(--border-color); height: 15px; border-radius: 10px; margin-top: 15px; overflow: hidden; }
         .loyalty-progress-fill { background: var(--cyan); height: 100%; width: 0%; transition: 0.5s; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg); border-top: 2px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg); border-top: 2px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; transition: 0.3s;}
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: var(--text-muted); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; }
         .nav-item.active { color: var(--red); }
@@ -90,7 +90,7 @@
     <header>
         <div class="logo">dám dym</div>
         <div class="header-controls">
-            <div class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</div>
+            <div class="theme-toggle" onclick="toggleTheme()" id="theme-btn"></div>
             <div class="status-badge"><span class="pulse-dot"></span> 24/7</div>
         </div>
     </header>
@@ -236,9 +236,7 @@
     </nav>
 
     <script type="module">
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister()));
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister())); }
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -251,16 +249,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ТЕМА
+        // ИКОНКИ ТЕМЫ (СВГ)
+        const sunIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        const moonIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
         let currentTheme = localStorage.getItem('damdym_theme') || 'light';
         document.body.setAttribute('data-theme', currentTheme);
-        document.getElementById('theme-btn').innerText = currentTheme === 'light' ? '🌙' : '☀️';
+        document.getElementById('theme-btn').innerHTML = currentTheme === 'light' ? moonIcon : sunIcon;
 
         window.toggleTheme = function() {
             currentTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.body.setAttribute('data-theme', currentTheme);
             localStorage.setItem('damdym_theme', currentTheme);
-            document.getElementById('theme-btn').innerText = currentTheme === 'light' ? '🌙' : '☀️';
+            document.getElementById('theme-btn').innerHTML = currentTheme === 'light' ? moonIcon : sunIcon;
         };
 
         let currentUserPhone = localStorage.getItem('damdym_phone') || null;
@@ -396,7 +397,7 @@
 
         window.closeOrderModal = function() { document.getElementById('order-modal').style.display = 'none'; };
 
-        // ЗДЕСЬ ТЕЛЕГРАМ ПОЛНОСТЬЮ ВЫРЕЗАН. Только Firebase.
+        // ТЕЛЕГРАМ ВОЗВРАЩАЕТСЯ
         window.submitOrder = async function() {
             saveCurrentBowl(); 
             const comment = document.getElementById('comment-input').value.trim();
@@ -405,11 +406,14 @@
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.innerText = "ОТПРАВЛЯЕМ..."; submitBtn.disabled = true;
 
-            let bowlsArrayForDb = bowlsData.map(b => ({ 
-                strength: strengthLabels[b.strength], 
-                flavor: b.flavor || "На усмотрение", 
-                ice: b.ice 
-            }));
+            let bowlsTextForTg = '';
+            let bowlsArrayForDb = bowlsData.map((b, i) => {
+                let f = b.flavor || "На усмотрение";
+                let s = strengthLabels[b.strength];
+                let iceText = b.ice ? "Да 🧊" : "Нет ❌";
+                bowlsTextForTg += `\n💨 Чаша ${i+1}: ${s} | Вкус: ${f} | Лед: ${iceText}`;
+                return { strength: s, flavor: f, ice: b.ice };
+            });
 
             try {
                 const docRef = await addDoc(collection(db, "orders"), {
@@ -425,6 +429,20 @@
 
                 await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: docRef.id });
                 currentUserData.activeOrderId = docRef.id;
+
+                // ОТПРАВКА В ТГ
+                const clientName = currentUserData.name || "Не указано";
+                const tgText = `🔥 НОВЫЙ ЗАКАЗ: ${currentOrderTariff}\n👤 Имя: ${clientName}\n📱 Тел: ${currentUserPhone}\n📍 Адрес: ${comment}${bowlsTextForTg}`;
+                const cleanPhone = currentUserPhone.replace(/\D/g, '');
+                const waLink = `https://wa.me/${cleanPhone}`;
+
+                fetch(`https://api.telegram.org/bot8616525461:AAGTwex70ZkIQMwbBikG9msSG6dY0ErEDKg/sendMessage`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        chat_id: "7711813441", text: tgText, 
+                        reply_markup: { inline_keyboard: [[{ text: "📲 НАПИСАТЬ В WA", url: waLink }], [{ text: "💻 ОТКРЫТЬ CRM", url: `https://${window.location.host}/admin.html` }]] }
+                    })
+                }).catch(()=>{});
 
                 closeOrderModal(); updateUI(); switchTab('tab-home');
             } catch(e) { alert("Ошибка заказа"); }
@@ -529,4 +547,23 @@
                     document.getElementById('home-tracker').style.display = 'none';
                 }
             } else {
-                document.getElementById('nav-profile-
+                document.getElementById('nav-profile-text').innerText = 'Вход';
+                document.getElementById('view-login').style.display = 'block';
+                document.getElementById('view-register').style.display = 'none';
+                document.getElementById('view-profile').style.display = 'none';
+                document.getElementById('home-empty').style.display = 'block';
+                document.getElementById('home-tracker').style.display = 'none';
+                
+                ['solo', 'double', 'company'].forEach(item => {
+                    const basePrice = parseInt(document.getElementById(`price-${item}`).getAttribute('data-base'));
+                    document.getElementById(`price-${item}`).innerText = basePrice.toLocaleString() + ' ₸';
+                    document.getElementById(`old-price-${item}`).style.display = 'none';
+                    document.getElementById(`badge-${item}`).style.display = 'none';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => { if(currentUserPhone) updateUI(); });
+    </script>
+</body>
+</html>
