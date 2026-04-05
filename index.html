@@ -8,84 +8,119 @@
     <title>dám dym APP</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-dirty: #f4f2ed; --black: #121212; --red: #e60023; --cyan: #00e5ff; --font-body: 'Montserrat', sans-serif; --font-vandal: 'Permanent Marker', cursive; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-body); background-color: var(--bg-dirty); color: var(--black); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        /* ЦВЕТОВЫЕ ПЕРЕМЕННЫЕ */
+        :root { 
+            --red: #e60023; --cyan: #00e5ff; 
+            --font-body: 'Montserrat', sans-serif; --font-vandal: 'Permanent Marker', cursive; 
+        }
+        
+        /* СВЕТЛАЯ ТЕМА (По умолчанию) */
+        [data-theme="light"] {
+            --bg-main: #f4f2ed; --bg-card: #ffffff; --text-main: #121212; --text-muted: #555; 
+            --border-color: #121212; --input-bg: #fafafa; --nav-bg: #ffffff;
+        }
 
-        .btn { display: inline-flex; justify-content: center; align-items: center; width: 100%; font-family: var(--font-body); font-weight: 900; text-transform: uppercase; padding: 18px 20px; background: var(--cyan); color: var(--black); border: 3px solid var(--black); border-radius: 12px; box-shadow: 0px 4px 0px var(--black); font-size: 1.1rem; cursor: pointer; transition: 0.1s;}
-        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--black); }
-        .btn-red { background: var(--red); color: white; }
-        .btn-black { background: var(--black); color: white; }
+        /* ТЕМНАЯ ТЕМА */
+        [data-theme="dark"] {
+            --bg-main: #121212; --bg-card: #1e1e1e; --text-main: #ffffff; --text-muted: #aaa; 
+            --border-color: #444; --input-bg: #2a2a2a; --nav-bg: #1e1e1e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--font-body); background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
+
+        /* КНОПКИ */
+        .btn { display: inline-flex; justify-content: center; align-items: center; width: 100%; font-family: var(--font-body); font-weight: 900; text-transform: uppercase; padding: 18px 20px; border: 3px solid var(--border-color); border-radius: 12px; box-shadow: 0px 4px 0px var(--border-color); font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border-color); }
+        .btn-cyan { background: var(--cyan); color: #121212; }
+        .btn-red { background: var(--red); color: white; border-color: var(--red); box-shadow: 0px 4px 0px #800013;}
+        .btn-black { background: var(--text-main); color: var(--bg-main); }
         .btn-outline { background: transparent; color: var(--red); border-color: var(--red); box-shadow: none; margin-top: 15px; }
 
-        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: white; border-bottom: 2px solid rgba(0,0,0,0.1); padding-top: calc(15px + env(safe-area-inset-top)); }
-        .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--black); }
-        .status-badge { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.8rem; background: var(--black); color: white; padding: 6px 12px; border-radius: 20px; }
+        /* ШАПКА И ОГОНЕК */
+        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border-bottom: 2px solid var(--border-color); padding-top: calc(15px + env(safe-area-inset-top)); transition: 0.3s; }
+        .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--text-main); }
+        .header-controls { display: flex; gap: 15px; align-items: center; }
+        .theme-toggle { font-size: 1.5rem; cursor: pointer; }
+        .status-badge { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.8rem; background: var(--text-main); color: var(--bg-main); padding: 6px 12px; border-radius: 20px; }
+        .pulse-dot { display: inline-block; width: 8px; height: 8px; background-color: #00ff00; border-radius: 50%; animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
 
+        /* КОНТЕНТ */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 5vw 100px; -ms-overflow-style: none; scrollbar-width: none; }
         .app-content::-webkit-scrollbar { display: none; }
         .tab-pane { display: none; animation: fadeIn 0.2s ease-out; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .section-title { font-weight: 900; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; }
+        .section-title { font-weight: 900; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; color: var(--text-main); }
         
-        .app-card { background: white; border: 3px solid var(--black); padding: 20px; margin-bottom: 20px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); }
+        /* КАРТОЧКИ КАТАЛОГА */
+        .app-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 20px; margin-bottom: 20px; border-radius: 16px; transition: 0.3s; }
         .app-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .app-card-title { font-family: var(--font-vandal); font-size: 2.2rem; }
         .app-card-price { font-family: var(--font-body); font-weight: 900; font-size: 1.5rem; color: var(--red); text-align: right; }
         .app-card-desc { font-weight: 800; font-size: 1rem; margin-bottom: 8px; line-height: 1.3; }
-        .app-card-kit { font-weight: 500; font-size: 0.85rem; color: #666; margin-bottom: 20px; line-height: 1.4; }
+        .app-card-kit { font-weight: 500; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4; }
         
         .price-wrapper { display: flex; flex-direction: column; align-items: flex-end; }
-        .old-price { font-family: var(--font-body); font-size: 1rem; color: #999; text-decoration: line-through; text-decoration-color: var(--black); font-weight: 900; display: none; }
-        .discount-badge { font-family: var(--font-body); background: var(--cyan); color: var(--black); font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none; text-transform: uppercase;}
+        .old-price { font-family: var(--font-body); font-size: 1rem; color: var(--text-muted); text-decoration: line-through; font-weight: 900; display: none; }
+        .discount-badge { font-family: var(--font-body); background: var(--cyan); color: #121212; font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none; text-transform: uppercase;}
 
+        /* МОДАЛКА И ЗАБИВКИ */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; max-width: 600px; border-top: 4px solid var(--black); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--bg-card); width: 100%; max-width: 600px; border-top: 4px solid var(--border-color); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
         .modal-title { font-weight: 900; font-size: 2rem; margin-bottom: 5px; text-transform: uppercase; }
-        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); margin-bottom: 20px; }
-        .modal-label { font-weight: 900; font-size: 0.9rem; margin-top: 25px; margin-bottom: 10px; display: block; color: #555; }
+        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); margin-bottom: 15px; }
         
-        .range-slider { width: 100%; appearance: none; height: 10px; background: #eee; border-radius: 5px; outline: none; margin-bottom: 10px; border: 2px solid var(--black); }
-        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--red); border: 3px solid var(--black); border-radius: 50%; cursor: pointer; }
+        /* КВАДРАТНЫЕ КНОПКИ ЗАБИВОК */
+        .bowl-tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
+        .bowl-tab { flex: 1; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-vandal); font-size: 1.5rem; border: 3px solid var(--border-color); border-radius: 12px; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+        .bowl-tab.active { background: var(--red); color: white; border-color: var(--red); transform: translateY(-3px); box-shadow: 0 4px 0 var(--border-color); }
+
+        .modal-label { font-weight: 900; font-size: 0.9rem; margin-top: 20px; margin-bottom: 10px; display: block; color: var(--text-muted); }
+        .range-slider { width: 100%; appearance: none; height: 10px; background: var(--border-color); border-radius: 5px; outline: none; margin-bottom: 10px; }
+        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--red); border: 3px solid var(--bg-card); border-radius: 50%; cursor: pointer; }
         .strength-text { font-weight: 900; font-size: 1.2rem; text-align: center; margin-bottom: 10px; }
         
-        .modal-input { width: 100%; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: #fafafa; font-family: var(--font-body); font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .modal-input { width: 100%; padding: 15px; border: 3px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: var(--font-body); font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
         .ice-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: white; font-weight: 900; text-align: center; cursor: pointer; color: #888; }
-        .ice-btn.active { background: var(--cyan); color: var(--black); border-color: var(--black); }
+        .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--border-color); border-radius: 12px; background: var(--input-bg); font-weight: 900; text-align: center; cursor: pointer; color: var(--text-muted); }
+        .ice-btn.active { background: var(--cyan); color: #121212; border-color: var(--border-color); }
 
-        .tracker-card { background: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: none; text-align: center; }
-        .tracker-status { font-weight: 900; font-size: 1.3rem; margin: 15px 0; background: #eee; padding: 15px; border-radius: 8px; border: 2px dashed #ccc;}
+        .tracker-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 25px; border-radius: 16px; display: none; text-align: center; }
+        .tracker-status { font-weight: 900; font-size: 1.3rem; margin: 15px 0; background: var(--input-bg); padding: 15px; border-radius: 8px; border: 2px dashed var(--border-color);}
         
-        .auth-box { background: white; border: 3px solid var(--black); padding: 30px 20px; border-radius: 16px; text-align: center; }
+        .auth-box { background: var(--bg-card); border: 3px solid var(--border-color); padding: 30px 20px; border-radius: 16px; text-align: center; }
         .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
 
-        /* Прогресс бар лояльности */
-        .loyalty-progress-bg { background: #333; height: 15px; border-radius: 10px; margin-top: 15px; overflow: hidden; border: 2px solid #555;}
+        .loyalty-progress-bg { background: var(--border-color); height: 15px; border-radius: 10px; margin-top: 15px; overflow: hidden; }
         .loyalty-progress-fill { background: var(--cyan); height: 100%; width: 0%; transition: 0.5s; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 2px solid rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: #aaa; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
+        /* НАВИГАЦИЯ */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg); border-top: 2px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; transition: 0.3s;}
+        .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: var(--text-muted); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; }
         .nav-item.active { color: var(--red); }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
     <header>
         <div class="logo">dám dym</div>
-        <div class="status-badge"><span class="pulse-dot"></span> 24/7</div>
+        <div class="header-controls">
+            <div class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</div>
+            <div class="status-badge"><span class="pulse-dot"></span> 24/7</div>
+        </div>
     </header>
 
     <div class="app-content">
         <div id="tab-home" class="tab-pane active">
             <h2 class="section-title">ТВОЙ ДЫМ</h2>
             
-            <div id="home-empty" style="text-align: center; padding: 50px 20px; background: white; border: 3px dashed #ccc; border-radius: 16px; font-weight: 800; color: #888;">
+            <div id="home-empty" style="text-align: center; padding: 50px 20px; border: 3px dashed var(--border-color); border-radius: 16px; font-weight: 800; color: var(--text-muted);">
                 <p>Выбери аппарат в Арсенале, и здесь появится статус твоего заказа.</p>
                 <button class="btn btn-red" style="margin-top: 25px;" onclick="switchTab('tab-store')">В АРСЕНАЛ</button>
             </div>
@@ -155,6 +190,7 @@
 
             <div id="view-register" class="auth-box" style="display: none;">
                 <h2 class="section-title">РЕГИСТРАЦИЯ</h2>
+                <input type="text" class="modal-input" id="reg-name" placeholder="Твое имя (как обращаться?)" style="text-align: center;">
                 <input type="tel" class="modal-input" id="reg-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
                 <input type="password" class="modal-input" id="reg-pass" placeholder="Придумай пароль" style="text-align: center;">
                 <button class="btn btn-black" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
@@ -163,12 +199,12 @@
 
             <div id="view-profile" style="display: none;">
                 <h2 class="section-title">ПРОФИЛЬ</h2>
-                <div class="app-card" style="background: var(--black); color: white;">
-                    <p style="font-weight: 800; color: #aaa; font-size: 0.9rem;">Твой номер</p>
-                    <div style="font-family: var(--font-vandal); font-size: 2rem; color: var(--cyan);" id="profile-phone">...</div>
+                <div class="app-card" style="background: var(--text-main); color: var(--bg-main);">
+                    <p style="font-weight: 800; font-size: 1.2rem; margin-bottom: 5px; text-transform: uppercase;" id="profile-name">Имя</p>
+                    <div style="font-family: var(--font-vandal); font-size: 1.5rem; color: var(--cyan); margin-bottom: 20px;" id="profile-phone">...</div>
                     
-                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px dashed #444;">
-                        <p style="font-weight: 800; color: #aaa; font-size: 0.9rem;">СИСТЕМА ЛОЯЛЬНОСТИ</p>
+                    <div style="border-top: 2px dashed var(--bg-main); padding-top: 15px;">
+                        <p style="font-weight: 800; font-size: 0.9rem;">СИСТЕМА ЛОЯЛЬНОСТИ</p>
                         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;">
                             <span style="font-size: 1.2rem; font-weight: 900;" id="profile-spent">0 ₸</span>
                             <span style="font-size: 1.2rem; font-weight: 900; color: var(--red); font-family: var(--font-body);" id="profile-discount-text">0% СКИДКА</span>
@@ -176,10 +212,10 @@
                         <div class="loyalty-progress-bg">
                             <div class="loyalty-progress-fill" id="loyalty-bar"></div>
                         </div>
-                        <p style="font-size: 0.75rem; color: #888; margin-top: 5px; font-weight: 700;" id="loyalty-next">До следующей скидки: 75 000 ₸</p>
+                        <p style="font-size: 0.75rem; margin-top: 5px; font-weight: 700; opacity: 0.7;" id="loyalty-next">До следующей скидки: 75 000 ₸</p>
                     </div>
                 </div>
-                <button class="btn btn-outline" style="border-color: #ccc; color: var(--black);" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
+                <button class="btn btn-outline" style="border-color: var(--border-color); color: var(--text-main);" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
             </div>
         </div>
     </div>
@@ -188,21 +224,28 @@
         <div class="modal-content">
             <h2 class="modal-title">НАСТРОЙКА</h2>
             <div class="modal-subtitle" id="modal-tariff-name">...</div>
-            <label class="modal-label">КРЕПОСТЬ (0-10)</label>
+            
+            <div class="bowl-tabs-container" id="bowl-tabs-container" style="display: none;"></div>
+
+            <label class="modal-label" id="lbl-strength">КРЕПОСТЬ (0-10)</label>
             <input type="range" min="0" max="10" value="5" class="range-slider" id="strength-slider">
             <div class="strength-text" id="strength-display">СРЕДНИЙ</div>
-            <label class="modal-label">ВКУСОВЫЕ ПРЕДПОЧТЕНИЯ</label>
+
+            <label class="modal-label" id="lbl-flavor">ВКУСОВЫЕ ПРЕДПОЧТЕНИЯ</label>
             <input type="text" class="modal-input" id="flavor-input" placeholder="Ягодный, Цитрус, Выпечка...">
-            <label class="modal-label">ХОЛОДОК</label>
+
+            <label class="modal-label" id="lbl-ice">ХОЛОДОК</label>
             <div class="ice-toggle">
                 <div class="ice-btn active" onclick="setIce(true)" id="ice-yes">ДА</div>
                 <div class="ice-btn" onclick="setIce(false)" id="ice-no">НЕТ</div>
             </div>
-            <label class="modal-label">АДРЕС И КОММЕНТАРИЙ</label>
+
+            <label class="modal-label">АДРЕС И КОММЕНТАРИЙ (Один на заказ)</label>
             <textarea class="modal-input" id="comment-input" rows="3" placeholder="Куда везти? Номер домофона?"></textarea>
+
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn btn-black" style="flex: 1;" onclick="closeOrderModal()">ОТМЕНА</button>
-                <button class="btn btn-red" style="flex: 2;" id="submit-btn" onclick="submitOrder()">ЗАКАЗАТЬ (<span id="modal-final-price"></span> ₸)</button>
+                <button class="btn btn-red" style="flex: 2;" id="submit-btn" onclick="submitOrder()">ЗАКАЗАТЬ</button>
             </div>
         </div>
     </div>
@@ -214,7 +257,7 @@
     </nav>
 
     <script type="module">
-        // Очистка старых Service Worker
+        // Очистка старых версий (PWA)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) { registration.unregister(); }
@@ -235,6 +278,18 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // ТЕМА
+        let currentTheme = localStorage.getItem('damdym_theme') || 'light';
+        document.body.setAttribute('data-theme', currentTheme);
+        document.getElementById('theme-btn').innerText = currentTheme === 'light' ? '🌙' : '☀️';
+
+        window.toggleTheme = function() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('damdym_theme', currentTheme);
+            document.getElementById('theme-btn').innerText = currentTheme === 'light' ? '🌙' : '☀️';
+        };
 
         let currentUserPhone = localStorage.getItem('damdym_phone') || null;
         let currentUserData = null;
@@ -263,16 +318,18 @@
             document.getElementById('view-register').style.display = type === 'register' ? 'block' : 'none';
         };
 
+        // РЕГИСТРАЦИЯ С ИМЕНЕМ
         window.register = async function() {
+            const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
-            if(phone.length < 5 || pass.length < 3) return alert('Введи данные!');
+            if(phone.length < 5 || pass.length < 3 || name.length < 2) return alert('Заполни все данные корректно!');
 
             try {
                 const userRef = doc(db, "users", phone);
                 if ((await getDoc(userRef)).exists()) return alert('Номер уже в системе!');
 
-                const newUserData = { password: pass, activeOrderId: null, totalSpent: 0 };
+                const newUserData = { name: name, password: pass, activeOrderId: null, totalSpent: 0 };
                 await setDoc(userRef, newUserData);
                 
                 currentUserPhone = phone; currentUserData = newUserData;
@@ -301,48 +358,126 @@
             updateUI(); switchTab('tab-profile');
         };
 
-        let currentOrderTariff = "", currentOrderBasePrice = 0, currentOrderFinalPrice = 0, hasIce = true;
+        // ЛОГИКА ЗАБИВОК
+        let currentOrderTariff = "", currentOrderFinalPrice = 0;
+        let bowlsData = [];
+        let activeBowlIndex = 0;
         const strengthLabels = { 0:"ЛЕГКИЙ (0)", 1:"ЛЕГКИЙ (1)", 2:"ЛЕГКИЙ (2)", 3:"НИЖЕ СРЕДНЕГО", 4:"НИЖЕ СРЕДНЕГО", 5:"СРЕДНИЙ", 6:"СРЕДНИЙ", 7:"ВЫШЕ СРЕДНЕГО", 8:"ВЫШЕ СРЕДНЕГО", 9:"КРЕПКИЙ", 10:"КРЕПКИЙ" };
 
-        document.getElementById('strength-slider').addEventListener('input', e => document.getElementById('strength-display').innerText = strengthLabels[e.target.value]);
-        window.setIce = function(val) { hasIce = val; document.getElementById('ice-yes').classList.toggle('active', val); document.getElementById('ice-no').classList.toggle('active', !val); };
+        function saveCurrentBowl() {
+            if(bowlsData.length > 0) {
+                bowlsData[activeBowlIndex].strength = document.getElementById('strength-slider').value;
+                bowlsData[activeBowlIndex].flavor = document.getElementById('flavor-input').value;
+            }
+        }
+
+        document.getElementById('strength-slider').addEventListener('input', e => {
+            document.getElementById('strength-display').innerText = strengthLabels[e.target.value];
+            bowlsData[activeBowlIndex].strength = e.target.value;
+        });
+
+        document.getElementById('flavor-input').addEventListener('input', e => {
+            bowlsData[activeBowlIndex].flavor = e.target.value;
+        });
+
+        window.setIce = function(val) { 
+            bowlsData[activeBowlIndex].ice = val;
+            document.getElementById('ice-yes').classList.toggle('active', val); 
+            document.getElementById('ice-no').classList.toggle('active', !val); 
+        };
+
+        window.selectBowl = function(index) {
+            saveCurrentBowl();
+            activeBowlIndex = index;
+            
+            document.querySelectorAll('.bowl-tab').forEach((el, i) => el.classList.toggle('active', i === index));
+            document.getElementById('lbl-strength').innerText = `КРЕПОСТЬ (ЧАША ${index+1})`;
+            
+            const b = bowlsData[index];
+            document.getElementById('strength-slider').value = b.strength;
+            document.getElementById('strength-display').innerText = strengthLabels[b.strength];
+            document.getElementById('flavor-input').value = b.flavor;
+            
+            document.getElementById('ice-yes').classList.toggle('active', b.ice); 
+            document.getElementById('ice-no').classList.toggle('active', !b.ice); 
+        };
 
         window.openOrderModal = function(tariff, basePrice) {
             if (!currentUserPhone) return alert('Сначала войди в профиль!'), switchTab('tab-profile');
             if (currentUserData && currentUserData.activeOrderId) return alert('У тебя уже есть активный заказ!');
             
             currentOrderTariff = tariff; 
-            currentOrderBasePrice = basePrice;
             currentOrderFinalPrice = Math.floor(basePrice - (basePrice * (userCurrentDiscount / 100)));
             
+            let numBowls = 1;
+            if(tariff === 'DOUBLE') numBowls = 2;
+            if(tariff === 'COMPANY') numBowls = 4;
+
+            bowlsData = Array.from({length: numBowls}, () => ({ strength: 5, flavor: '', ice: true }));
+            
+            const tabsContainer = document.getElementById('bowl-tabs-container');
+            if(numBowls > 1) {
+                tabsContainer.style.display = 'flex';
+                tabsContainer.innerHTML = bowlsData.map((_, i) => `<div class="bowl-tab ${i===0?'active':''}" onclick="selectBowl(${i})">${i+1}</div>`).join('');
+            } else {
+                tabsContainer.style.display = 'none';
+                document.getElementById('lbl-strength').innerText = `КРЕПОСТЬ (0-10)`;
+            }
+
             document.getElementById('modal-tariff-name').innerText = tariff;
-            document.getElementById('modal-final-price').innerText = currentOrderFinalPrice;
+            document.getElementById('comment-input').value = "";
+            selectBowl(0);
+            
             document.getElementById('order-modal').style.display = 'flex';
         };
+
         window.closeOrderModal = function() { document.getElementById('order-modal').style.display = 'none'; };
 
         window.submitOrder = async function() {
+            saveCurrentBowl(); // Сохраняем последнюю открытую вкладку
+            
             const comment = document.getElementById('comment-input').value.trim();
-            if (!comment) return alert("Напиши адрес!");
+            if (!comment) return alert("Обязательно напиши адрес в комментарии!");
 
             const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = true;
+            submitBtn.innerText = "ОТПРАВЛЯЕМ..."; submitBtn.disabled = true;
+
+            // Формируем текст для телеграма
+            let bowlsTextForTg = '';
+            let bowlsArrayForDb = [];
+            
+            bowlsData.forEach((b, i) => {
+                let f = b.flavor || "На усмотрение";
+                let s = strengthLabels[b.strength];
+                let ice = b.ice ? "Да 🧊" : "Нет ❌";
+                bowlsTextForTg += `\n💨 Забивка ${i+1}: ${s} | Вкус: ${f} | Лед: ${ice}`;
+                bowlsArrayForDb.push({ strength: s, flavor: f, ice: b.ice });
+            });
 
             try {
                 const docRef = await addDoc(collection(db, "orders"), {
-                    phone: currentUserPhone, tariff: currentOrderTariff,
-                    price: currentOrderFinalPrice,
-                    strength: strengthLabels[document.getElementById('strength-slider').value],
-                    flavor: document.getElementById('flavor-input').value || "На усмотрение",
-                    ice: hasIce ? "Да" : "Нет", comment: comment, status: "new", createdAt: Date.now()
+                    phone: currentUserPhone, tariff: currentOrderTariff, price: currentOrderFinalPrice,
+                    bowls: bowlsArrayForDb, comment: comment, status: "new", createdAt: Date.now()
                 });
 
                 await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: docRef.id });
                 currentUserData.activeOrderId = docRef.id;
 
+                // Отправляем в Телеграм
+                const clientName = currentUserData.name || "Не указано";
+                const tgText = `🔥 НОВЫЙ ЗАКАЗ: ${currentOrderTariff}\n👤 Имя: ${clientName}\n📱 Тел: ${currentUserPhone}\n📍 Адрес: ${comment}\n${bowlsTextForTg}`;
+                
+                fetch(`https://api.telegram.org/bot8616525461:AAGTwex70ZkIQMwbBikG9msSG6dY0ErEDKg/sendMessage`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        chat_id: "7711813441", text: tgText, 
+                        reply_markup: { inline_keyboard: [[{ text: "💻 ОТКРЫТЬ CRM", url: `https://${window.location.host}/admin.html` }]] }
+                    })
+                }).catch(()=>{});
+
                 closeOrderModal(); updateUI(); switchTab('tab-home');
             } catch(e) { alert("Ошибка заказа"); }
-            finally { submitBtn.disabled = false; }
+            finally { submitBtn.innerText = "ЗАКАЗАТЬ"; submitBtn.disabled = false; }
         };
 
         window.cancelOrder = async function() {
@@ -367,7 +502,7 @@
 
                         const sMap = {'new':'ОБРАБОТКА...','accepted':'ПРИНЯТ В РАБОТУ','assembly':'СОБИРАЕМ АППАРАТ','courier':'КУРЬЕР В ПУТИ 🚗','done':'ВЫДАН ✅','canceled_client':'ОТМЕНЕН ❌', 'canceled_admin':'ОТМЕНЕН АДМИНОМ ❌'};
                         statusBox.innerText = sMap[order.status] || order.status;
-                        statusBox.style.color = (order.status === 'done') ? "green" : (order.status.includes('cancel') ? "var(--red)" : "var(--black)");
+                        statusBox.style.color = (order.status === 'done') ? "green" : (order.status.includes('cancel') ? "var(--red)" : "var(--text-main)");
 
                         if(['done', 'canceled_client', 'canceled_admin'].includes(order.status)) {
                             setTimeout(async () => {
@@ -397,6 +532,7 @@
                 document.getElementById('view-register').style.display = 'none';
                 document.getElementById('view-profile').style.display = 'block';
                 
+                document.getElementById('profile-name').innerText = currentUserData.name || 'Бро';
                 document.getElementById('profile-phone').innerText = currentUserPhone;
                 
                 // РАСЧЕТ СКИДКИ
