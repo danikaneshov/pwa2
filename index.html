@@ -2,216 +2,85 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#121212">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>dám dym APP</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM | dám dym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg-dirty: #f4f2ed; --black: #121212; --red: #e60023; --cyan: #00e5ff;
-            --font-body: 'Montserrat', sans-serif; --font-vandal: 'Permanent Marker', cursive;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-body); background-color: var(--bg-dirty); color: var(--black); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
-        .btn { display: inline-flex; justify-content: center; align-items: center; width: 100%; font-family: var(--font-body); font-weight: 900; text-transform: uppercase; padding: 18px 20px; background: var(--cyan); color: var(--black); border: 3px solid var(--black); border-radius: 12px; box-shadow: 0px 4px 0px var(--black); font-size: 1.1rem; letter-spacing: 1px; transition: 0.1s; cursor: pointer; }
-        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--black); }
-        .btn-red { background: var(--red); color: white; }
-        .btn-black { background: var(--black); color: white; }
-        .btn-outline { background: transparent; color: var(--red); border-color: var(--red); box-shadow: none; margin-top: 15px; }
-
-        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: white; border-bottom: 2px solid rgba(0,0,0,0.1); padding-top: calc(15px + env(safe-area-inset-top)); }
-        .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--black); }
-        .status-badge { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.8rem; background: var(--black); color: white; padding: 6px 12px; border-radius: 20px; }
-        .pulse-dot { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
-
-        .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 5vw 100px; -ms-overflow-style: none; scrollbar-width: none; }
-        .app-content::-webkit-scrollbar { display: none; }
-        .tab-pane { display: none; animation: fadeIn 0.2s ease-out; }
-        .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Montserrat', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
         
-        .section-title { font-weight: 900; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; }
-        .promo-subtitle { font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: 20px; text-transform: uppercase; }
-        
-        .app-card { background: white; border: 3px solid var(--black); padding: 20px; margin-bottom: 20px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: flex; flex-direction: column; }
-        .app-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .app-card-title { font-family: var(--font-vandal); font-size: 2.2rem; }
-        .app-card-price { font-family: var(--font-vandal); font-size: 1.8rem; color: var(--red); text-align: right; }
-        .app-card-desc { font-weight: 800; font-size: 1rem; margin-bottom: 8px; line-height: 1.3; }
-        .app-card-kit { font-weight: 500; font-size: 0.85rem; color: #666; margin-bottom: 20px; line-height: 1.4; }
-        .old-price { font-size: 1.1rem; color: #999; text-decoration: line-through; text-decoration-color: var(--black); display: block;}
+        /* Логин скрин */
+        #login-screen { position: fixed; inset: 0; background: #121212; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
+        .login-input { padding: 15px; font-size: 1.2rem; text-align: center; border: 3px solid #00e5ff; background: #1e1e1e; color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        .login-btn { padding: 15px 30px; font-weight: 900; background: #e60023; color: white; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; max-width: 600px; border-top: 4px solid var(--black); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-family: 'Permanent Marker', cursive; color: #00e5ff; margin: 0; font-size: 2rem; }
+        .notify-btn { background: #333; color: white; border: 1px solid #555; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.8rem; }
         
-        .modal-title { font-weight: 900; font-size: 2rem; margin-bottom: 5px; text-transform: uppercase; }
-        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); margin-bottom: 20px; }
-        .modal-label { font-weight: 900; font-size: 0.9rem; margin-top: 25px; margin-bottom: 10px; display: block; color: #555; text-transform: uppercase; }
+        .dashboard { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px; }
+        .analytics { display: flex; gap: 10px; }
+        .stat-box { flex: 1; background: #1e1e1e; padding: 15px; border-radius: 8px; border: 2px solid #333; text-align: center; }
+        .stat-num { font-family: 'Permanent Marker', cursive; font-size: 1.8rem; color: #e60023; }
+        .stat-label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 800; }
         
-        .range-slider { width: 100%; appearance: none; height: 10px; background: #eee; border-radius: 5px; outline: none; margin-bottom: 10px; border: 2px solid var(--black); }
-        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--red); border: 3px solid var(--black); border-radius: 50%; cursor: pointer; }
-        .strength-text { font-weight: 900; font-size: 1.2rem; text-align: center; margin-bottom: 10px; text-transform: uppercase; }
-        
-        .modal-input { width: 100%; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: #fafafa; font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
-        .modal-input:focus { border-color: var(--red); background: white; }
-        
-        .ice-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: white; font-weight: 900; text-align: center; cursor: pointer; color: #888; transition: 0.2s; }
-        .ice-btn.active { background: var(--cyan); color: var(--black); border-color: var(--black); }
+        .chart-container { background: #1e1e1e; padding: 15px; border-radius: 8px; border: 2px solid #333; height: 250px; }
 
-        .tracker-card { background: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: none; text-align: center; }
-        .tracker-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; color: var(--red); text-transform: uppercase; }
-        .tracker-tariff { font-family: var(--font-vandal); font-size: 2rem; margin-bottom: 20px; }
-        .tracker-status { font-weight: 900; font-size: 1.3rem; margin: 15px 0; background: #eee; padding: 15px; border-radius: 8px; border: 2px dashed #ccc;}
-        
-        .auth-box { background: white; border: 3px solid var(--black); padding: 30px 20px; border-radius: 16px; box-shadow: 0px 6px 0px var(--black); text-align: center; }
-        .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
+        .order-card { background: white; color: #121212; padding: 15px; margin-bottom: 15px; border-radius: 12px; border-left: 8px solid #00e5ff; }
+        .order-card.status-new { border-left-color: #e60023; box-shadow: 0 0 15px rgba(230,0,35,0.5); }
+        .order-card.status-done { opacity: 0.6; border-left-color: #4caf50; }
+        .order-card.status-canceled { opacity: 0.5; border-left-color: #555; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 2px solid rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: #aaa; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; transition: 0.2s; }
-        .nav-item.active { color: var(--red); }
-        .nav-item.active .nav-icon { transform: scale(1.1); }
+        .o-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; }
+        .o-tariff { font-family: 'Permanent Marker', cursive; font-size: 1.5rem; }
+        .o-details { font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; font-weight: 700;}
+        .o-details span { color: #e60023; }
+
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .btn { padding: 10px; font-family: 'Montserrat', sans-serif; font-weight: 900; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .b-accept { background: #ff9800; color: black; }
+        .b-wa { background: #25D366; color: white; }
+        .b-assembly { background: #333; color: white; }
+        .b-courier { background: #00e5ff; color: black; }
+        .b-done { background: #4caf50; color: white; grid-column: span 2; }
+        .b-cancel { background: transparent; color: #e60023; border: 2px solid #e60023; grid-column: span 2; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">dám dym</div>
-        <div class="status-badge"><span class="pulse-dot"></span> 24/7</div>
-    </header>
-
-    <div class="app-content">
-        <div id="tab-home" class="tab-pane active">
-            <h2 class="section-title">ТВОЙ ДЫМ</h2>
-            
-            <div id="home-empty" style="text-align: center; padding: 50px 20px; background: white; border: 3px dashed #ccc; border-radius: 16px; font-weight: 800; color: #888;">
-                <p>Выбери аппарат в Арсенале, и здесь появится статус твоего заказа.</p>
-                <button class="btn btn-red" style="margin-top: 25px;" onclick="switchTab('tab-store')">В АРСЕНАЛ</button>
-            </div>
-
-            <div id="home-tracker" class="tracker-card">
-                <div class="tracker-title">АКТИВНЫЙ ЗАКАЗ</div>
-                <div class="tracker-tariff" id="tracker-tariff">...</div>
-                <div style="font-weight: 800; font-size: 0.9rem; color: #555; text-transform: uppercase;">Статус:</div>
-                <div class="tracker-status" id="tracker-status-text">ОБРАБОТКА...</div>
-                
-                <button class="btn btn-outline" id="btn-cancel-order" onclick="cancelOrder()" style="display: none;">ОТМЕНИТЬ ЗАКАЗ</button>
-            </div>
-        </div>
-
-        <div id="tab-store" class="tab-pane">
-            <h2 class="section-title">АРСЕНАЛ</h2>
-            
-            <div class="app-card">
-                <div class="app-card-header">
-                    <span class="app-card-title">SOLO</span>
-                    <span class="app-card-price"><span class="old-price">8 750</span>7 000 ₸</span>
-                </div>
-                <p class="app-card-desc">Отличный выбор для одного или в паре.</p>
-                <p class="app-card-kit">1 аппарат, 1 забивка, 4 угля, плитка, щипцы.</p>
-                <button class="btn btn-black" onclick="openOrderModal('SOLO', 7000)">НАСТРОИТЬ ЗАКАЗ</button>
-            </div>
-
-            <div class="app-card">
-                <div class="app-card-header">
-                    <span class="app-card-title">DOUBLE</span>
-                    <span class="app-card-price"><span class="old-price">11 250</span>9 000 ₸</span>
-                </div>
-                <p class="app-card-desc">Две забивки — выгоднее, чем докупать!</p>
-                <p class="app-card-kit">1 аппарат, 2 забивки, 8 углей, плитка, щипцы.</p>
-                <button class="btn btn-red" onclick="openOrderModal('DOUBLE', 9000)">НАСТРОИТЬ ЗАКАЗ</button>
-            </div>
-
-            <div class="app-card">
-                <div class="app-card-header">
-                    <span class="app-card-title">COMPANY</span>
-                    <span class="app-card-price"><span class="old-price">20 000</span>16 000 ₸</span>
-                </div>
-                <p class="app-card-desc">Идеально для тусовки с друзьями.</p>
-                <p class="app-card-kit">2 аппарата, 4 забивки, 16 углей, 2 плитки.</p>
-                <button class="btn btn-cyan" onclick="openOrderModal('COMPANY', 16000)">НАСТРОИТЬ ЗАКАЗ</button>
-            </div>
-        </div>
-
-        <div id="tab-profile" class="tab-pane">
-            <div id="view-login" class="auth-box">
-                <h2 class="section-title" style="margin-bottom: 25px;">ВХОД</h2>
-                <input type="tel" class="modal-input" id="login-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
-                <input type="password" class="modal-input" id="login-pass" placeholder="Пароль" style="text-align: center;">
-                <button class="btn btn-red" onclick="login()">ВОЙТИ</button>
-                <div class="auth-switch" onclick="toggleAuth('register')">Создать аккаунт</div>
-            </div>
-
-            <div id="view-register" class="auth-box" style="display: none;">
-                <h2 class="section-title" style="margin-bottom: 25px;">РЕГИСТРАЦИЯ</h2>
-                <input type="tel" class="modal-input" id="reg-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
-                <input type="password" class="modal-input" id="reg-pass" placeholder="Придумай пароль" style="text-align: center;">
-                <button class="btn btn-black" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
-                <div class="auth-switch" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</div>
-            </div>
-
-            <div id="view-profile" style="display: none;">
-                <h2 class="section-title">ПРОФИЛЬ</h2>
-                <div class="app-card" style="background: var(--black); color: white;">
-                    <p style="font-weight: 800; color: #aaa; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px;">Твой номер</p>
-                    <div style="font-family: var(--font-vandal); font-size: 2rem; color: var(--cyan);" id="profile-phone">...</div>
-                </div>
-                <button class="btn" style="background: transparent; color: var(--black); border-color: #ccc; box-shadow: none;" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
-            </div>
-        </div>
+    <div id="login-screen">
+        <h1 style="margin-bottom: 20px;">DÁM DYM CRM</h1>
+        <input type="password" id="crm-pass" class="login-input" placeholder="Пароль">
+        <button class="login-btn" onclick="checkPassword()">ВОЙТИ</button>
     </div>
 
-    <div class="modal-overlay" id="order-modal">
-        <div class="modal-content">
-            <h2 class="modal-title">НАСТРОЙКА</h2>
-            <div class="modal-subtitle" id="modal-tariff-name">...</div>
-            
-            <label class="modal-label">КРЕПОСТЬ (0-10)</label>
-            <input type="range" min="0" max="10" value="5" class="range-slider" id="strength-slider">
-            <div class="strength-text" id="strength-display">СРЕДНИЙ</div>
+    <div id="main-ui" style="display: none;">
+        <header>
+            <h1>CRM DASHBOARD</h1>
+            <button class="notify-btn" onclick="requestNotifications()">Включить PUSH 🔔</button>
+        </header>
 
-            <label class="modal-label">ВКУСОВЫЕ ПРЕДПОЧТЕНИЯ</label>
-            <input type="text" class="modal-input" id="flavor-input" placeholder="Ягодный, Цитрус, Выпечка...">
-
-            <label class="modal-label">ХОЛОДОК</label>
-            <div class="ice-toggle">
-                <div class="ice-btn active" onclick="setIce(true)" id="ice-yes">С ХОЛОДКОМ</div>
-                <div class="ice-btn" onclick="setIce(false)" id="ice-no">БЕЗ ХОЛОДКА</div>
+        <div class="dashboard">
+            <div class="analytics">
+                <div class="stat-box"><div class="stat-num" id="stat-count">0</div><div class="stat-label">Всего заказов</div></div>
+                <div class="stat-box"><div class="stat-num" id="stat-revenue">0 ₸</div><div class="stat-label">Выручка</div></div>
             </div>
-
-            <label class="modal-label">АДРЕС И КОММЕНТАРИЙ</label>
-            <textarea class="modal-input" id="comment-input" rows="3" placeholder="Куда везти? Номер домофона?"></textarea>
-
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn btn-black" style="flex: 1;" onclick="closeOrderModal()">ОТМЕНА</button>
-                <button class="btn btn-red" style="flex: 2;" id="submit-btn" onclick="submitOrder()">ОТПРАВИТЬ</button>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
             </div>
         </div>
+
+        <h2 style="font-size: 1.2rem; margin-bottom: 15px;">ПОТОК ЗАКАЗОВ</h2>
+        <div id="orders-container"><p style="text-align:center;">Загрузка базы...</p></div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Главная</span>
-        </div>
-        <div class="nav-item" id="nav-store" onclick="switchTab('tab-store')">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg><span>Каталог</span>
-        </div>
-        <div class="nav-item" id="nav-profile" onclick="switchTab('tab-profile')">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span id="nav-profile-text">Вход</span>
-        </div>
-    </nav>
+    <audio id="alert-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Твои настройки Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0",
             authDomain: "damdymdb.firebaseapp.com",
@@ -224,232 +93,143 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const TG_BOT_TOKEN = "8616525461:AAGTwex70ZkIQMwbBikG9msSG6dY0ErEDKg";
-        const TG_CHAT_ID = "7711813441";
-
-        let currentUserPhone = localStorage.getItem('damdym_phone') || null;
-        let currentUserData = null;
-        let activeOrderUnsubscribe = null;
-
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('nav-' + tabId.split('-')[1]).classList.add('active');
+        // ЛОГИН
+        window.checkPassword = function() {
+            if(document.getElementById('crm-pass').value === 'anesh123') {
+                sessionStorage.setItem('crm_auth', 'true');
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-ui').style.display = 'block';
+            } else { alert("Неверный пароль!"); }
         };
 
-        window.toggleAuth = function(type) {
-            document.getElementById('view-login').style.display = type === 'login' ? 'block' : 'none';
-            document.getElementById('view-register').style.display = type === 'register' ? 'block' : 'none';
+        if(sessionStorage.getItem('crm_auth') === 'true') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'block';
+        }
+
+        // PUSH-УВЕДОМЛЕНИЯ
+        let pushEnabled = false;
+        window.requestNotifications = function() {
+            if (!("Notification" in window)) { alert("Браузер не поддерживает пуши"); return; }
+            Notification.requestPermission().then(perm => {
+                if(perm === "granted") {
+                    pushEnabled = true;
+                    document.getElementById('alert-sound').play().catch(()=>{});
+                    alert("Уведомления включены!");
+                }
+            });
         };
 
-        window.register = async function() {
-            const phone = document.getElementById('reg-phone').value.trim();
-            const pass = document.getElementById('reg-pass').value.trim();
-            if(phone.length < 5 || pass.length < 3) return alert('Введи данные корректно!');
+        if (Notification.permission === "granted") pushEnabled = true;
 
-            try {
-                const userRef = doc(db, "users", phone);
-                const docSnap = await getDoc(userRef);
-                if (docSnap.exists()) return alert('Номер уже в системе. Войди.');
-
-                const newUserData = { password: pass, activeOrderId: null };
-                await setDoc(userRef, newUserData);
-                
-                currentUserPhone = phone; currentUserData = newUserData;
-                localStorage.setItem('damdym_phone', phone);
-                updateUI(); switchTab('tab-store');
-            } catch (e) { alert("Ошибка сети"); }
-        };
-
-        window.login = async function() {
-            const phone = document.getElementById('login-phone').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-            if(!phone || !pass) return alert('Заполни поля!');
-
-            try {
-                const userRef = doc(db, "users", phone);
-                const docSnap = await getDoc(userRef);
-                if (!docSnap.exists()) return alert('Пользователь не найден!');
-                if (docSnap.data().password !== pass) return alert('Неверный пароль!');
-
-                currentUserPhone = phone; currentUserData = docSnap.data();
-                localStorage.setItem('damdym_phone', phone);
-                updateUI(); switchTab('tab-store');
-            } catch (e) { alert("Ошибка входа"); }
-        };
-
-        window.logout = function() {
-            currentUserPhone = null; currentUserData = null;
-            if(activeOrderUnsubscribe) activeOrderUnsubscribe();
-            localStorage.removeItem('damdym_phone');
-            updateUI(); switchTab('tab-profile');
-        };
-
-        let currentOrderTariff = "", currentOrderPrice = 0, hasIce = true;
-        const strengthLabels = { 0:"ЛЕГКИЙ (0)", 1:"ЛЕГКИЙ (1)", 2:"ЛЕГКИЙ (2)", 3:"НИЖЕ СРЕДНЕГО (3)", 4:"НИЖЕ СРЕДНЕГО (4)", 5:"СРЕДНИЙ (5)", 6:"СРЕДНИЙ (6)", 7:"ВЫШЕ СРЕДНЕГО (7)", 8:"ВЫШЕ СРЕДНЕГО (8)", 9:"КРЕПКИЙ (9)", 10:"КРЕПКИЙ (10)" };
-
-        document.getElementById('strength-slider').addEventListener('input', e => {
-            document.getElementById('strength-display').innerText = strengthLabels[e.target.value];
+        // ГРАФИК ПРОДАЖ
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ label: 'Выручка (₸)', data: [], backgroundColor: '#00e5ff', borderRadius: 4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#333' } }, x: { grid: { display: false } } } }
         });
 
-        window.setIce = function(val) {
-            hasIce = val;
-            document.getElementById('ice-yes').classList.toggle('active', val);
-            document.getElementById('ice-no').classList.toggle('active', !val);
-        };
-
-        window.openOrderModal = function(tariff, price) {
-            if (!currentUserPhone) return alert('Сначала войди в профиль!'), switchTab('tab-profile');
-            if (currentUserData && currentUserData.activeOrderId) return alert('У тебя уже есть активный заказ!');
-            
-            currentOrderTariff = tariff; currentOrderPrice = price;
-            document.getElementById('modal-tariff-name').innerText = tariff;
-            document.getElementById('order-modal').style.display = 'flex';
-        };
-        
-        window.closeOrderModal = function() { document.getElementById('order-modal').style.display = 'none'; };
-
-        window.submitOrder = async function() {
-            const strength = strengthLabels[document.getElementById('strength-slider').value];
-            const flavor = document.getElementById('flavor-input').value || "На усмотрение";
-            const comment = document.getElementById('comment-input').value.trim();
-            const iceText = hasIce ? "Да" : "Нет";
-
-            if (!comment) return alert("Напиши адрес в комментарии!");
-
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.innerText = "ОТПРАВЛЯЕМ..."; submitBtn.disabled = true;
-
+        // ОБНОВЛЕНИЕ СТАТУСОВ И БОНУСНОЙ СИСТЕМЫ
+        window.updateStatus = async function(orderId, newStatus, userPhone, price) {
             try {
-                // Создаем документ заказа в коллекции orders
-                const docRef = await addDoc(collection(db, "orders"), {
-                    phone: currentUserPhone,
-                    tariff: currentOrderTariff,
-                    price: currentOrderPrice,
-                    strength: strength,
-                    flavor: flavor,
-                    ice: iceText,
-                    comment: comment,
-                    status: "new",
-                    createdAt: Date.now()
-                });
-
-                // Привязываем заказ к юзеру
-                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: docRef.id });
-                currentUserData.activeOrderId = docRef.id;
-
-                // Отправляем пуш в Telegram (ссылка на твою новую CRM)
-                const text = `🔥 НОВЫЙ ЗАКАЗ: ${currentOrderTariff}\n\n📱 Клиент: ${currentUserPhone}\n📍 Адрес: ${comment}`;
-                const crmLink = `https://${window.location.host}/admin.html`; // Ссылка на твою админку
-
-                fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        chat_id: TG_CHAT_ID, text: text, 
-                        reply_markup: { inline_keyboard: [[{ text: "💻 ОТКРЫТЬ CRM", url: crmLink }]] }
-                    })
-                }).catch(()=>{});
-
-                closeOrderModal();
-                updateUI();
-                switchTab('tab-home');
-
-            } catch(e) { alert("Ошибка при создании заказа"); console.error(e); }
-            finally { submitBtn.innerText = "ОТПРАВИТЬ"; submitBtn.disabled = false; }
-        };
-
-        window.cancelOrder = async function() {
-            if(confirm("Точно отменить заказ?")) {
-                try {
-                    await updateDoc(doc(db, "orders", currentUserData.activeOrderId), { status: "canceled_client" });
-                    await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: null });
-                    currentUserData.activeOrderId = null;
-                    if(activeOrderUnsubscribe) activeOrderUnsubscribe();
-                    updateUI();
-                } catch(e) { alert("Ошибка отмены"); }
-            }
-        };
-
-        function listenToOrder() {
-            if(activeOrderUnsubscribe) activeOrderUnsubscribe();
-            if(currentUserData && currentUserData.activeOrderId) {
-                activeOrderUnsubscribe = onSnapshot(doc(db, "orders", currentUserData.activeOrderId), (docSnap) => {
-                    if (docSnap.exists()) {
-                        const order = docSnap.data();
-                        const statusBox = document.getElementById('tracker-status-text');
-                        const cancelBtn = document.getElementById('btn-cancel-order');
-                        
-                        document.getElementById('tracker-tariff').innerText = order.tariff;
-                        
-                        if(order.status === 'new') {
-                            statusBox.innerText = "ОБРАБОТКА..."; statusBox.style.color = "var(--black)";
-                            cancelBtn.style.display = "block"; // Можно отменить
-                        } else if(order.status === 'accepted') {
-                            statusBox.innerText = "ПРИНЯТ В РАБОТУ"; statusBox.style.color = "var(--black)";
-                            cancelBtn.style.display = "none"; // Уже нельзя отменить
-                        } else if(order.status === 'assembly') {
-                            statusBox.innerText = "СОБИРАЕМ АППАРАТ"; statusBox.style.color = "var(--black)";
-                            cancelBtn.style.display = "none";
-                        } else if(order.status === 'courier') {
-                            statusBox.innerText = "КУРЬЕР В ПУТИ 🚗"; statusBox.style.color = "var(--cyan)";
-                            cancelBtn.style.display = "none";
-                        } else if(order.status === 'done') {
-                            statusBox.innerText = "ВЫДАН ✅"; statusBox.style.color = "green";
-                            cancelBtn.style.display = "none";
-                            // Сбрасываем активный заказ через 5 сек
-                            setTimeout(async () => {
-                                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: null });
-                                currentUserData.activeOrderId = null;
-                                updateUI();
-                            }, 5000);
-                        } else if(order.status.includes('canceled')) {
-                            statusBox.innerText = "ОТМЕНЕН ❌"; statusBox.style.color = "var(--red)";
-                            cancelBtn.style.display = "none";
-                            setTimeout(async () => {
-                                await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: null });
-                                currentUserData.activeOrderId = null;
-                                updateUI();
-                            }, 5000);
-                        }
+                // Если заказ ВЫДАН, добавляем сумму к totalSpent пользователя
+                if (newStatus === 'done') {
+                    const userRef = doc(db, "users", userPhone);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        const currentSpent = userSnap.data().totalSpent || 0;
+                        await updateDoc(userRef, { totalSpent: currentSpent + Number(price) });
                     }
-                });
-            }
-        }
-
-        async function updateUI() {
-            if(currentUserPhone) {
-                if(!currentUserData) {
-                    const snap = await getDoc(doc(db, "users", currentUserPhone));
-                    if(snap.exists()) currentUserData = snap.data();
                 }
+                await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+            } catch(e) { alert("Ошибка обновления!"); }
+        };
 
-                document.getElementById('nav-profile-text').innerText = 'Профиль';
-                document.getElementById('view-login').style.display = 'none';
-                document.getElementById('view-register').style.display = 'none';
-                document.getElementById('view-profile').style.display = 'block';
-                document.getElementById('profile-phone').innerText = currentUserPhone;
+        // СЛУШАТЕЛЬ ЗАКАЗОВ
+        let lastOrderCount = 0;
+        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '';
+            
+            let totalOrders = 0;
+            let totalRevenue = 0;
+            let salesByDay = {}; // Для графика
 
-                if (currentUserData && currentUserData.activeOrderId) {
-                    document.getElementById('home-empty').style.display = 'none';
-                    document.getElementById('home-tracker').style.display = 'block';
-                    listenToOrder();
-                } else {
-                    document.getElementById('home-empty').style.display = 'block';
-                    document.getElementById('home-tracker').style.display = 'none';
+            const orders = [];
+            snapshot.forEach((docSnap) => {
+                const order = docSnap.data();
+                order.id = docSnap.id;
+                orders.push(order);
+
+                // Статистика
+                if(order.status === 'done') {
+                    totalOrders++;
+                    totalRevenue += Number(order.price) || 0;
+                    
+                    // Группировка для графика
+                    const dateStr = new Date(order.createdAt).toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
+                    salesByDay[dateStr] = (salesByDay[dateStr] || 0) + Number(order.price);
                 }
-            } else {
-                document.getElementById('nav-profile-text').innerText = 'Вход';
-                document.getElementById('view-login').style.display = 'block';
-                document.getElementById('view-register').style.display = 'none';
-                document.getElementById('view-profile').style.display = 'none';
-                document.getElementById('home-empty').style.display = 'block';
-                document.getElementById('home-tracker').style.display = 'none';
-            }
-        }
+            });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if(currentUserPhone) updateUI();
+            // Уведомления о новом заказе
+            const activeNewOrders = orders.filter(o => o.status === 'new');
+            if (activeNewOrders.length > lastOrderCount && lastOrderCount !== 0) {
+                if (pushEnabled) {
+                    new Notification("🔥 НОВЫЙ ЗАКАЗ!", { body: `Тариф: ${activeNewOrders[0].tariff}. Ждет подтверждения!`, icon: "https://cdn-icons-png.flaticon.com/512/732/732205.png" });
+                }
+                document.getElementById('alert-sound').play().catch(()=>{});
+            }
+            lastOrderCount = activeNewOrders.length;
+
+            // Обновление графика
+            chart.data.labels = Object.keys(salesByDay).reverse();
+            chart.data.datasets[0].data = Object.values(salesByDay).reverse();
+            chart.update();
+
+            document.getElementById('stat-count').innerText = totalOrders;
+            document.getElementById('stat-revenue').innerText = totalRevenue.toLocaleString() + ' ₸';
+
+            // Отрисовка заказов
+            orders.forEach(order => {
+                const d = new Date(order.createdAt);
+                const timeStr = `${d.getHours()}:${(d.getMinutes()<10?'0':'') + d.getMinutes()}`;
+                const cleanPhone = order.phone.replace(/\D/g, '');
+                
+                let cardClass = '';
+                if(order.status === 'new') cardClass = 'status-new';
+                if(order.status === 'done') cardClass = 'status-done';
+                if(order.status.includes('canceled')) cardClass = 'status-canceled';
+
+                container.innerHTML += `
+                    <div class="order-card ${cardClass}">
+                        <div class="o-header">
+                            <span class="o-tariff">${order.tariff} (${order.price} ₸)</span>
+                            <span>${timeStr}</span>
+                        </div>
+                        <div class="o-details">
+                            Номер: <span>${order.phone}</span><br>
+                            Крепость: ${order.strength}<br>
+                            Вкус: ${order.flavor} | Лед: ${order.ice}<br>
+                            Адрес: <span>${order.comment}</span><br>
+                            Статус: <b>${order.status.toUpperCase()}</b>
+                        </div>
+                        ${!order.status.includes('done') && !order.status.includes('canceled') ? `
+                        <div class="actions">
+                            <button class="btn b-accept" onclick="updateStatus('${order.id}', 'accepted', '${order.phone}', ${order.price})">ПРИНЯТЬ</button>
+                            <a href="https://wa.me/${cleanPhone}" target="_blank" style="text-decoration:none;"><button class="btn b-wa" style="width:100%">WHATSAPP</button></a>
+                            <button class="btn b-assembly" onclick="updateStatus('${order.id}', 'assembly', '${order.phone}', ${order.price})">СБОРКА</button>
+                            <button class="btn b-courier" onclick="updateStatus('${order.id}', 'courier', '${order.phone}', ${order.price})">КУРЬЕР</button>
+                            <button class="btn b-done" onclick="updateStatus('${order.id}', 'done', '${order.phone}', ${order.price})">ВЫДАН (ЗАВЕРШИТЬ)</button>
+                            <button class="btn b-cancel" onclick="if(confirm('Отменить?')) updateStatus('${order.id}', 'canceled_admin', '${order.phone}', ${order.price})">ОТМЕНИТЬ</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
         });
     </script>
 </body>
