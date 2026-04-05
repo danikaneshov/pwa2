@@ -10,7 +10,6 @@
     <style>
         body { font-family: 'Montserrat', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
         
-        /* Логин скрин */
         #login-screen { position: fixed; inset: 0; background: #121212; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
         .login-input { padding: 15px; font-size: 1.2rem; text-align: center; border: 3px solid #00e5ff; background: #1e1e1e; color: white; border-radius: 8px; margin-bottom: 15px; outline: none; font-family: 'Montserrat', sans-serif; font-weight: 800;}
         .login-btn { padding: 15px 30px; font-weight: 900; background: #e60023; color: white; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-family: 'Montserrat', sans-serif;}
@@ -32,10 +31,12 @@
         .order-card.status-done { opacity: 0.6; border-left-color: #4caf50; }
         .order-card.status-canceled { opacity: 0.5; border-left-color: #555; }
 
-        .o-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; }
+        .o-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; border-bottom: 2px dashed #ccc; padding-bottom: 10px;}
         .o-tariff { font-family: 'Permanent Marker', cursive; font-size: 1.5rem; }
         .o-details { font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; font-weight: 700;}
         .o-details span { color: #e60023; }
+
+        .bowl-item { background: #eee; padding: 8px; border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem;}
 
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
         .btn { padding: 10px; font-family: 'Montserrat', sans-serif; font-weight: 900; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
@@ -78,22 +79,20 @@
     <audio id="alert-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <script type="module">
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister())); }
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0",
-            authDomain: "damdymdb.firebaseapp.com",
-            projectId: "damdymdb",
-            storageBucket: "damdymdb.firebasestorage.app",
-            messagingSenderId: "43924470905",
-            appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
+            apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0", authDomain: "damdymdb.firebaseapp.com",
+            projectId: "damdymdb", storageBucket: "damdymdb.firebasestorage.app",
+            messagingSenderId: "43924470905", appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ЛОГИН
         window.checkPassword = function() {
             if(document.getElementById('crm-pass').value === 'anesh123') {
                 sessionStorage.setItem('crm_auth', 'true');
@@ -107,7 +106,6 @@
             document.getElementById('main-ui').style.display = 'block';
         }
 
-        // PUSH-УВЕДОМЛЕНИЯ
         let pushEnabled = false;
         window.requestNotifications = function() {
             if (!("Notification" in window)) { alert("Твой браузер не поддерживает пуши"); return; }
@@ -115,13 +113,12 @@
                 if(perm === "granted") {
                     pushEnabled = true;
                     document.getElementById('alert-sound').play().catch(()=>{});
-                    alert("Уведомления включены! Не закрывай эту вкладку.");
+                    alert("Уведомления включены! Оставь вкладку открытой.");
                 }
             });
         };
         if (Notification.permission === "granted") pushEnabled = true;
 
-        // ГРАФИК ПРОДАЖ
         const ctx = document.getElementById('salesChart').getContext('2d');
         let chart = new Chart(ctx, {
             type: 'bar',
@@ -129,10 +126,8 @@
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#333' } }, x: { grid: { display: false } } } }
         });
 
-        // ОБНОВЛЕНИЕ СТАТУСОВ
         window.updateStatus = async function(orderId, newStatus, userPhone, price) {
             try {
-                // Если статус ВЫДАН, начисляем бонусы
                 if (newStatus === 'done') {
                     const userRef = doc(db, "users", userPhone);
                     const userSnap = await getDoc(userRef);
@@ -158,14 +153,10 @@
 
             const orders = [];
             snapshot.forEach((docSnap) => {
-                const order = docSnap.data();
-                order.id = docSnap.id;
-                orders.push(order);
+                const order = docSnap.data(); order.id = docSnap.id; orders.push(order);
 
                 if(order.status === 'done') {
-                    totalOrders++;
-                    totalRevenue += Number(order.price) || 0;
-                    
+                    totalOrders++; totalRevenue += Number(order.price) || 0;
                     const dateStr = new Date(order.createdAt).toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
                     salesByDay[dateStr] = (salesByDay[dateStr] || 0) + Number(order.price);
                 }
@@ -173,9 +164,7 @@
 
             const activeNewOrders = orders.filter(o => o.status === 'new');
             if (activeNewOrders.length > lastOrderCount && lastOrderCount !== 0) {
-                if (pushEnabled) {
-                    new Notification("🔥 НОВЫЙ ЗАКАЗ!", { body: `Тариф: ${activeNewOrders[0].tariff}. Ждет подтверждения!`, icon: "https://cdn-icons-png.flaticon.com/512/732/732205.png" });
-                }
+                if (pushEnabled) { new Notification("🔥 НОВЫЙ ЗАКАЗ!", { body: `Тариф: ${activeNewOrders[0].tariff}. Ждет подтверждения!`, icon: "https://cdn-icons-png.flaticon.com/512/732/732205.png" }); }
                 document.getElementById('alert-sound').play().catch(()=>{});
             }
             lastOrderCount = activeNewOrders.length;
@@ -197,18 +186,19 @@
                 if(order.status === 'done') cardClass = 'status-done';
                 if(order.status.includes('canceled')) cardClass = 'status-canceled';
 
+                let bowlsHTML = '';
+                if(order.bowls && order.bowls.length > 0) {
+                    bowlsHTML = order.bowls.map((b, i) => `<div class="bowl-item"><b>Забивка ${i+1}:</b> ${b.strength}, ${b.flavor}, Лед: ${b.ice ? 'Да' : 'Нет'}</div>`).join('');
+                }
+
                 container.innerHTML += `
                     <div class="order-card ${cardClass}">
-                        <div class="o-header">
-                            <span class="o-tariff">${order.tariff} (${order.price} ₸)</span>
-                            <span>${timeStr}</span>
-                        </div>
+                        <div class="o-header"><span class="o-tariff">${order.tariff} (${order.price} ₸)</span><span>${timeStr}</span></div>
                         <div class="o-details">
                             Номер: <span>${order.phone}</span><br>
-                            Крепость: ${order.strength}<br>
-                            Вкус: ${order.flavor} | Лед: ${order.ice}<br>
                             Адрес: <span>${order.comment}</span><br>
                             Статус: <b>${order.status.toUpperCase()}</b>
+                            <div style="margin-top: 10px;">${bowlsHTML}</div>
                         </div>
                         ${!order.status.includes('done') && !order.status.includes('canceled') ? `
                         <div class="actions">
@@ -218,8 +208,7 @@
                             <button class="btn b-courier" onclick="updateStatus('${order.id}', 'courier', '${order.phone}', ${order.price})">КУРЬЕР</button>
                             <button class="btn b-done" onclick="updateStatus('${order.id}', 'done', '${order.phone}', ${order.price})">ВЫДАН (ЗАВЕРШИТЬ)</button>
                             <button class="btn b-cancel" onclick="if(confirm('Отменить?')) updateStatus('${order.id}', 'canceled_admin', '${order.phone}', ${order.price})">ОТМЕНИТЬ</button>
-                        </div>
-                        ` : ''}
+                        </div>` : ''}
                     </div>
                 `;
             });
