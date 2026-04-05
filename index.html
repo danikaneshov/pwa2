@@ -70,11 +70,21 @@
         .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--border-color); border-radius: 12px; background: var(--input-bg); font-weight: 900; text-align: center; cursor: pointer; color: var(--text-muted); }
         .ice-btn.active { background: var(--cyan); color: #121212; border-color: var(--border-color); }
 
-        .tracker-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 25px; border-radius: 16px; display: none; text-align: center; }
+        .tracker-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 25px; border-radius: 16px; display: none; text-align: center; margin-bottom: 20px;}
         .tracker-status { font-weight: 900; font-size: 1.3rem; margin: 15px 0; background: var(--input-bg); padding: 15px; border-radius: 8px; border: 2px dashed var(--border-color);}
         
-        .auth-box { background: var(--bg-card); border: 3px solid var(--border-color); padding: 30px 20px; border-radius: 16px; text-align: center; }
+        .auth-box { background: var(--bg-card); border: 3px solid var(--border-color); padding: 30px 20px; border-radius: 16px; text-align: center; margin-bottom: 20px;}
         .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
+        
+        /* Чекбокс 21+ */
+        .checkbox-label { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; font-size: 0.8rem; text-align: left; margin-bottom: 20px; cursor: pointer; color: var(--text-muted); line-height: 1.4;}
+        .checkbox-label input { margin-top: 3px; transform: scale(1.3); accent-color: var(--red); flex-shrink: 0;}
+
+        /* Баннер PWA */
+        .pwa-banner { background: var(--bg-card); border: 3px dashed var(--border-color); padding: 20px; border-radius: 16px; text-align: left; margin-bottom: 20px;}
+        .pwa-banner h3 { font-weight: 900; font-size: 1.1rem; color: var(--text-main); margin-bottom: 10px; text-transform: uppercase; }
+        .pwa-banner p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; font-weight: 700; }
+        .pwa-step { font-size: 0.85rem; background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 8px; font-weight: 800; color: var(--text-main); border: 2px solid var(--border-color); display: flex; align-items: center; gap: 8px;}
 
         .loyalty-progress-bg { background: var(--border-color); height: 15px; border-radius: 10px; margin-top: 15px; overflow: hidden; }
         .loyalty-progress-fill { background: var(--cyan); height: 100%; width: 0%; transition: 0.5s; }
@@ -159,6 +169,7 @@
         </div>
 
         <div id="tab-profile" class="tab-pane">
+            
             <div id="view-login" class="auth-box">
                 <h2 class="section-title">ВХОД</h2>
                 <input type="tel" class="modal-input" id="login-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
@@ -172,6 +183,12 @@
                 <input type="text" class="modal-input" id="reg-name" placeholder="Твое имя (как обращаться?)" style="text-align: center;">
                 <input type="tel" class="modal-input" id="reg-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
                 <input type="password" class="modal-input" id="reg-pass" placeholder="Придумай пароль" style="text-align: center;">
+                
+                <label class="checkbox-label">
+                    <input type="checkbox" id="reg-age-check">
+                    <span>Мне есть 21 год (согласно ст. 110 Кодекса РК), и я согласен с правилами сервиса.</span>
+                </label>
+
                 <button class="btn btn-black" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
                 <div class="auth-switch" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</div>
             </div>
@@ -196,6 +213,14 @@
                 </div>
                 <button class="btn btn-outline" style="border-color: var(--border-color); color: var(--text-main);" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
             </div>
+
+            <div class="pwa-banner">
+                <h3>📲 Приложение Dám Dym</h3>
+                <p>Добавь сервис на главный экран, чтобы заказывать в один клик и копить скидку без браузера.</p>
+                <div class="pwa-step">🍏 <b>iOS:</b> Нажми «Поделиться» ➔ «На экран Домой»</div>
+                <div class="pwa-step">🤖 <b>Android:</b> Меню (три точки) ➔ «Добавить на гл. экран»</div>
+            </div>
+
         </div>
     </div>
 
@@ -236,7 +261,9 @@
     </nav>
 
     <script type="module">
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister())); }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister()));
+        }
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -249,7 +276,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ИКОНКИ ТЕМЫ (СВГ)
+        // ИКОНКИ ТЕМЫ
         const sunIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
         const moonIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 
@@ -290,7 +317,10 @@
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
+            const ageCheck = document.getElementById('reg-age-check').checked;
+
             if(phone.length < 5 || pass.length < 3 || name.length < 2) return alert('Заполни все данные!');
+            if(!ageCheck) return alert('Брат, для заказа тебе должно быть 21+!');
 
             try {
                 const userRef = doc(db, "users", phone);
@@ -397,7 +427,6 @@
 
         window.closeOrderModal = function() { document.getElementById('order-modal').style.display = 'none'; };
 
-        // ТЕЛЕГРАМ ВОЗВРАЩАЕТСЯ
         window.submitOrder = async function() {
             saveCurrentBowl(); 
             const comment = document.getElementById('comment-input').value.trim();
@@ -430,7 +459,6 @@
                 await updateDoc(doc(db, "users", currentUserPhone), { activeOrderId: docRef.id });
                 currentUserData.activeOrderId = docRef.id;
 
-                // ОТПРАВКА В ТГ
                 const clientName = currentUserData.name || "Не указано";
                 const tgText = `🔥 НОВЫЙ ЗАКАЗ: ${currentOrderTariff}\n👤 Имя: ${clientName}\n📱 Тел: ${currentUserPhone}\n📍 Адрес: ${comment}${bowlsTextForTg}`;
                 const cleanPhone = currentUserPhone.replace(/\D/g, '');
