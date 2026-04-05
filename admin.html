@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM | dám dym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
+        header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; text-align: center;}
+        h1 { font-family: 'Permanent Marker', cursive; color: #00e5ff; margin: 0; font-size: 2.5rem; }
+        
+        .analytics { display: flex; gap: 10px; margin-bottom: 20px; }
+        .stat-box { flex: 1; background: #1e1e1e; padding: 15px; border-radius: 8px; border: 2px solid #333; text-align: center; }
+        .stat-num { font-family: 'Permanent Marker', cursive; font-size: 2rem; color: #e60023; }
+        .stat-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; font-weight: 800; }
+
+        .order-card { background: white; color: #121212; padding: 15px; margin-bottom: 15px; border-radius: 12px; border-left: 8px solid #00e5ff; }
+        .order-card.status-new { border-left-color: #e60023; animation: blink 1s infinite alternate; }
+        .order-card.status-done { opacity: 0.6; border-left-color: #4caf50; }
+        .order-card.status-canceled { opacity: 0.5; border-left-color: #555; }
+        
+        @keyframes blink { from { box-shadow: 0 0 10px #e60023; } to { box-shadow: none; } }
+
+        .o-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 900; }
+        .o-tariff { font-family: 'Permanent Marker', cursive; font-size: 1.5rem; }
+        .o-details { font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; font-weight: 700;}
+        .o-details span { color: #e60023; }
+
+        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .btn { padding: 10px; font-family: 'Montserrat', sans-serif; font-weight: 900; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .b-accept { background: #ff9800; color: black; }
+        .b-wa { background: #25D366; color: white; }
+        .b-assembly { background: #333; color: white; }
+        .b-courier { background: #00e5ff; color: black; }
+        .b-done { background: #4caf50; color: white; grid-column: span 2; }
+        .b-cancel { background: transparent; color: #e60023; border: 2px solid #e60023; grid-column: span 2; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CONTROL PANEL</h1>
+    </header>
+
+    <div class="analytics">
+        <div class="stat-box">
+            <div class="stat-num" id="stat-count">0</div>
+            <div class="stat-label">Всего заказов</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" id="stat-revenue">0 ₸</div>
+            <div class="stat-label">Выручка</div>
+        </div>
+    </div>
+
+    <div id="orders-container"><p style="text-align:center;">Загрузка базы...</p></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0",
+            authDomain: "damdymdb.firebaseapp.com",
+            projectId: "damdymdb",
+            storageBucket: "damdymdb.firebasestorage.app",
+            messagingSenderId: "43924470905",
+            appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.updateStatus = async function(orderId, newStatus) {
+            try {
+                await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+            } catch(e) { alert("Ошибка обновления статуса!"); }
+        };
+
+        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '';
+            
+            let totalOrders = 0;
+            let totalRevenue = 0;
+
+            snapshot.forEach((docSnap) => {
+                const order = docSnap.data();
+                const id = docSnap.id;
+
+                // Считаем аналитику только по успешным
+                if(order.status === 'done') {
+                    totalOrders++;
+                    totalRevenue += Number(order.price) || 0;
+                }
+
+                const d = new Date(order.createdAt);
+                const timeStr = `${d.getHours()}:${(d.getMinutes()<10?'0':'') + d.getMinutes()}`;
+                
+                const cleanPhone = order.phone.replace(/\D/g, '');
+                const waLink = `https://wa.me/${cleanPhone}`;
+
+                let cardClass = '';
+                if(order.status === 'new') cardClass = 'status-new';
+                if(order.status === 'done') cardClass = 'status-done';
+                if(order.status.includes('canceled')) cardClass = 'status-canceled';
+
+                container.innerHTML += `
+                    <div class="order-card ${cardClass}">
+                        <div class="o-header">
+                            <span class="o-tariff">${order.tariff}</span>
+                            <span>${timeStr}</span>
+                        </div>
+                        <div class="o-details">
+                            Номер: <span>${order.phone}</span><br>
+                            Крепость: ${order.strength}<br>
+                            Вкус: ${order.flavor} | Лед: ${order.ice}<br>
+                            Адрес: <span>${order.comment}</span><br>
+                            Статус: <b>${order.status.toUpperCase()}</b>
+                        </div>
+                        ${!order.status.includes('done') && !order.status.includes('canceled') ? `
+                        <div class="actions">
+                            <button class="btn b-accept" onclick="updateStatus('${id}', 'accepted')">ПРИНЯТЬ</button>
+                            <a href="${waLink}" target="_blank" style="text-decoration:none;"><button class="btn b-wa" style="width:100%">В WHATSAPP</button></a>
+                            <button class="btn b-assembly" onclick="updateStatus('${id}', 'assembly')">СБОРКА</button>
+                            <button class="btn b-courier" onclick="updateStatus('${id}', 'courier')">КУРЬЕР</button>
+                            <button class="btn b-done" onclick="updateStatus('${id}', 'done')">ВЫДАН (ЗАВЕРШИТЬ)</button>
+                            <button class="btn b-cancel" onclick="if(confirm('Отменить?')) updateStatus('${id}', 'canceled_admin')">ОТМЕНИТЬ ЗАКАЗ</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            document.getElementById('stat-count').innerText = totalOrders;
+            document.getElementById('stat-revenue').innerText = totalRevenue.toLocaleString() + ' ₸';
+        });
+    </script>
+</body>
+</html>
