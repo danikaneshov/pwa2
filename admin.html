@@ -8,8 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Montserrat', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
+        body { font-family: 'Montserrat', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; transition: background 0.3s; }
         
+        .alert-bg { animation: bgBlink 1s infinite alternate; }
+        @keyframes bgBlink { from { background: #121212; } to { background: #4a0000; } }
+
         #login-screen { position: fixed; inset: 0; background: #121212; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
         .login-input { padding: 15px; font-size: 1.2rem; text-align: center; border: 3px solid #00e5ff; background: #1e1e1e; color: white; border-radius: 8px; margin-bottom: 15px; outline: none; font-family: 'Montserrat', sans-serif; font-weight: 800;}
         .login-btn { padding: 15px 30px; font-weight: 900; background: #e60023; color: white; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-family: 'Montserrat', sans-serif;}
@@ -35,7 +38,6 @@
         .o-tariff { font-family: 'Permanent Marker', cursive; font-size: 1.5rem; }
         .o-details { font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; font-weight: 700;}
         .o-details span { color: #e60023; }
-
         .bowl-item { background: #eee; padding: 8px; border-radius: 6px; margin-bottom: 5px; font-size: 0.85rem;}
 
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
@@ -59,7 +61,7 @@
     <div id="main-ui" style="display: none;">
         <header>
             <h1>DASHBOARD</h1>
-            <button class="notify-btn" onclick="requestNotifications()">Включить PUSH 🔔</button>
+            <button class="notify-btn" onclick="requestNotifications()">Тест Звука / PUSH 🔔</button>
         </header>
 
         <div class="dashboard">
@@ -89,15 +91,18 @@
             projectId: "damdymdb", storageBucket: "damdymdb.firebasestorage.app",
             messagingSenderId: "43924470905", appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Хак для браузеров: разблокировка звука после клика пользователя
         window.checkPassword = function() {
-            if(document.getElementById('crm-pass').value === 'anesh123') {
+            if(document.getElementById('crm-pass').value === 'anesh123' || sessionStorage.getItem('crm_auth') === 'true') {
                 sessionStorage.setItem('crm_auth', 'true');
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-ui').style.display = 'block';
+                
+                // В момент нажатия на кнопку "ВОЙТИ" мы прогружаем аудио, чтобы браузер дал разрешение
+                document.getElementById('alert-sound').load();
             } else { alert("Неверный пароль!"); }
         };
 
@@ -108,13 +113,10 @@
 
         let pushEnabled = false;
         window.requestNotifications = function() {
-            if (!("Notification" in window)) { alert("Твой браузер не поддерживает пуши"); return; }
+            document.getElementById('alert-sound').play().catch(()=>{}); // Тест звука
+            if (!("Notification" in window)) return;
             Notification.requestPermission().then(perm => {
-                if(perm === "granted") {
-                    pushEnabled = true;
-                    document.getElementById('alert-sound').play().catch(()=>{});
-                    alert("Уведомления включены! Оставь вкладку открытой.");
-                }
+                if(perm === "granted") pushEnabled = true;
             });
         };
         if (Notification.permission === "granted") pushEnabled = true;
@@ -162,10 +164,19 @@
                 }
             });
 
+            // Проверка новых заказов для СИРЕНЫ
             const activeNewOrders = orders.filter(o => o.status === 'new');
+            if (activeNewOrders.length > 0) {
+                // Если есть новые заказы, мигаем фоном (визуальная сирена)
+                document.body.classList.add('alert-bg');
+            } else {
+                document.body.classList.remove('alert-bg');
+            }
+
+            // Звук и пуш только если количество новых увеличилось
             if (activeNewOrders.length > lastOrderCount && lastOrderCount !== 0) {
-                if (pushEnabled) { new Notification("🔥 НОВЫЙ ЗАКАЗ!", { body: `Тариф: ${activeNewOrders[0].tariff}. Ждет подтверждения!`, icon: "https://cdn-icons-png.flaticon.com/512/732/732205.png" }); }
                 document.getElementById('alert-sound').play().catch(()=>{});
+                if (pushEnabled) { new Notification("🔥 НОВЫЙ ЗАКАЗ!", { body: `Тариф: ${activeNewOrders[0].tariff}. Ждет подтверждения!`}); }
             }
             lastOrderCount = activeNewOrders.length;
 
@@ -188,13 +199,14 @@
 
                 let bowlsHTML = '';
                 if(order.bowls && order.bowls.length > 0) {
-                    bowlsHTML = order.bowls.map((b, i) => `<div class="bowl-item"><b>Забивка ${i+1}:</b> ${b.strength}, ${b.flavor}, Лед: ${b.ice ? 'Да' : 'Нет'}</div>`).join('');
+                    bowlsHTML = order.bowls.map((b, i) => `<div class="bowl-item"><b>Чаша ${i+1}:</b> ${b.strength}, ${b.flavor}, Лед: ${b.ice ? 'Да' : 'Нет'}</div>`).join('');
                 }
 
                 container.innerHTML += `
                     <div class="order-card ${cardClass}">
                         <div class="o-header"><span class="o-tariff">${order.tariff} (${order.price} ₸)</span><span>${timeStr}</span></div>
                         <div class="o-details">
+                            Имя: <span>${order.name || 'Не указано'}</span><br>
                             Номер: <span>${order.phone}</span><br>
                             Адрес: <span>${order.comment}</span><br>
                             Статус: <b>${order.status.toUpperCase()}</b>
