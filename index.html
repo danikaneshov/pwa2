@@ -6,7 +6,9 @@
     <meta name="theme-color" content="#121212">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>dám dym APP</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,7 +25,6 @@
             background-image: radial-gradient(#00000010 1px, transparent 1px); background-size: 20px 20px;
         }
 
-        /* --- КНОПКИ --- */
         .btn { 
             display: inline-flex; justify-content: center; align-items: center; width: 100%; 
             font-family: var(--font-body); font-weight: 900; text-transform: uppercase; 
@@ -36,7 +37,6 @@
         .btn-red { background: var(--red); color: white; }
         .btn-black { background: var(--black); color: white; }
 
-        /* --- ШАПКА --- */
         header { 
             padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; 
             background: white; color: var(--black); flex-shrink: 0; 
@@ -52,7 +52,6 @@
         .pulse-dot { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* --- ТАБЫ И КОНТЕНТ --- */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 5vw 100px; -ms-overflow-style: none; scrollbar-width: none; }
         .app-content::-webkit-scrollbar { display: none; }
         .tab-pane { display: none; animation: fadeIn 0.2s ease-out; }
@@ -61,7 +60,6 @@
         
         .section-title { font-family: var(--font-body); font-weight: 900; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; color: var(--black); }
 
-        /* --- КАТАЛОГ --- */
         .promo-subtitle { font-family: var(--font-body); font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: 20px; text-transform: uppercase; }
         
         .app-card { background: white; border: 3px solid var(--black); padding: 20px; margin-bottom: 20px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: flex; flex-direction: column; }
@@ -72,7 +70,6 @@
         .app-card-kit { font-weight: 500; font-size: 0.85rem; color: #666; margin-bottom: 20px; line-height: 1.4; }
         .old-price { font-family: var(--font-body); font-size: 1.1rem; color: #999; text-decoration: line-through; text-decoration-color: var(--black); text-decoration-thickness: 2px; margin-right: 5px; display: block;}
 
-        /* --- МОДАЛКА ЗАКАЗА --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
         .modal-content { background: white; width: 100%; max-width: 600px; border-top: 4px solid var(--black); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -93,7 +90,6 @@
         .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: white; font-weight: 900; text-align: center; cursor: pointer; transition: 0.2s; color: #888; }
         .ice-btn.active { background: var(--cyan); color: var(--black); border-color: var(--black); }
 
-        /* --- ГЛАВНАЯ (СТАТУС ЗАКАЗА) --- */
         .tracker-card { background: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: none; text-align: center; }
         .tracker-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; color: var(--red); text-transform: uppercase; }
         .tracker-tariff { font-family: var(--font-vandal); font-size: 2rem; margin-bottom: 20px; }
@@ -101,11 +97,9 @@
         
         .profile-card { background: var(--black); color: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; margin-bottom: 20px; }
 
-        /* --- АВТОРИЗАЦИЯ --- */
         .auth-box { background: white; border: 3px solid var(--black); padding: 30px 20px; border-radius: 16px; box-shadow: 0px 6px 0px var(--black); text-align: center; }
         .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
 
-        /* --- BOTTOM NAV (SVG) --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 2px solid rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: #aaa; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
         .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; transition: 0.2s; }
@@ -121,7 +115,6 @@
     </header>
 
     <div class="app-content">
-
         <div id="tab-home" class="tab-pane active">
             <h2 class="section-title">ТВОЙ ДЫМ</h2>
             
@@ -260,64 +253,98 @@
         </div>
     </nav>
 
-    <script>
-        // ==========================================
-        // НАСТРОЙКИ TELEGRAM БОТА
-        // ==========================================
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Твои настройки Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk8sJuPI1N4EL1hD3CisVRoEs4nmudvP0",
+            authDomain: "damdymdb.firebaseapp.com",
+            projectId: "damdymdb",
+            storageBucket: "damdymdb.firebasestorage.app",
+            messagingSenderId: "43924470905",
+            appId: "1:43924470905:web:0310c5298da38d7f56a8a8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Настройки Telegram
         const TG_BOT_TOKEN = "8616525461:AAGTwex70ZkIQMwbBikG9msSG6dY0ErEDKg";
         const TG_CHAT_ID = "7711813441";
-        // ==========================================
 
-        let usersDB = JSON.parse(localStorage.getItem('damdym_users_v3')) || {};
         let currentUserPhone = localStorage.getItem('damdym_current_user') || null;
+        let currentUserData = null;
 
-        // UI Табы
-        function switchTab(tabId) {
+        // Прикрепляем функции к window, чтобы они работали из HTML
+        window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.getElementById('nav-' + tabId.split('-')[1]).classList.add('active');
             updateUI();
-        }
+        };
 
-        function toggleAuth(type) {
+        window.toggleAuth = function(type) {
             document.getElementById('view-login').style.display = type === 'login' ? 'block' : 'none';
             document.getElementById('view-register').style.display = type === 'register' ? 'block' : 'none';
-        }
+        };
 
-        // АВТОРИЗАЦИЯ
-        function register() {
+        // FIREBASE РЕГИСТРАЦИЯ
+        window.register = async function() {
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
             if(phone.length < 5 || pass.length < 3) return alert('Введи нормальный номер и пароль!');
-            if(usersDB[phone]) return alert('Этот номер уже зарегистрирован. Войди в аккаунт.');
 
-            usersDB[phone] = { password: pass, totalOrders: 0, activeOrder: null };
-            localStorage.setItem('damdym_users_v3', JSON.stringify(usersDB));
-            
-            currentUserPhone = phone;
-            localStorage.setItem('damdym_current_user', phone);
-            updateUI(); switchTab('tab-store');
-        }
+            try {
+                const userRef = doc(db, "users", phone);
+                const docSnap = await getDoc(userRef);
+                if (docSnap.exists()) return alert('Этот номер уже зарегистрирован. Войди в аккаунт.');
 
-        function login() {
+                const newUserData = { password: pass, totalOrders: 0, activeOrder: null };
+                await setDoc(userRef, newUserData);
+                
+                currentUserPhone = phone;
+                currentUserData = newUserData;
+                localStorage.setItem('damdym_current_user', phone);
+                
+                alert('Добро пожаловать в клуб!');
+                updateUI(); switchTab('tab-store');
+            } catch (e) { alert("Ошибка подключения к базе. Проверь интернет."); console.error(e); }
+        };
+
+        // FIREBASE ВХОД
+        window.login = async function() {
             const phone = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
-            if(!usersDB[phone]) return alert('Пользователь не найден!');
-            if(usersDB[phone].password !== pass) return alert('Неверный пароль!');
+            if(!phone || !pass) return alert('Заполни все поля!');
 
-            currentUserPhone = phone;
-            localStorage.setItem('damdym_current_user', phone);
-            updateUI(); switchTab('tab-store');
-        }
+            try {
+                const userRef = doc(db, "users", phone);
+                const docSnap = await getDoc(userRef);
+                
+                if (!docSnap.exists()) return alert('Пользователь не найден!');
+                
+                const data = docSnap.data();
+                if (data.password !== pass) return alert('Неверный пароль!');
 
-        function logout() {
+                currentUserPhone = phone;
+                currentUserData = data;
+                localStorage.setItem('damdym_current_user', phone);
+                
+                updateUI(); switchTab('tab-store');
+            } catch (e) { alert("Ошибка при входе!"); console.error(e); }
+        };
+
+        window.logout = function() {
             currentUserPhone = null;
+            currentUserData = null;
             localStorage.removeItem('damdym_current_user');
             updateUI(); switchTab('tab-profile');
-        }
+        };
 
-        // МОДАЛКА
+        // МОДАЛКА ЗАКАЗА
         let currentOrderTariff = "", currentOrderPrice = "", hasIce = true;
         const strengthLabels = { 0:"ЛЕГКИЙ (0)", 1:"ЛЕГКИЙ (1)", 2:"ЛЕГКИЙ (2)", 3:"НИЖЕ СРЕДНЕГО (3)", 4:"НИЖЕ СРЕДНЕГО (4)", 5:"СРЕДНИЙ (5)", 6:"СРЕДНИЙ (6)", 7:"ВЫШЕ СРЕДНЕГО (7)", 8:"ВЫШЕ СРЕДНЕГО (8)", 9:"КРЕПКИЙ (9)", 10:"КРЕПКИЙ (10)" };
 
@@ -325,22 +352,25 @@
             document.getElementById('strength-display').innerText = strengthLabels[e.target.value];
         });
 
-        function setIce(val) {
+        window.setIce = function(val) {
             hasIce = val;
             document.getElementById('ice-yes').classList.toggle('active', val);
             document.getElementById('ice-no').classList.toggle('active', !val);
-        }
+        };
 
-        function openOrderModal(tariff, price) {
+        window.openOrderModal = function(tariff, price) {
             if (!currentUserPhone) return alert('Сначала войди в профиль!'), switchTab('tab-profile');
             currentOrderTariff = tariff; currentOrderPrice = price;
             document.getElementById('modal-tariff-name').innerText = tariff;
             document.getElementById('order-modal').style.display = 'flex';
-        }
-        function closeOrderModal() { document.getElementById('order-modal').style.display = 'none'; }
+        };
+        
+        window.closeOrderModal = function() { 
+            document.getElementById('order-modal').style.display = 'none'; 
+        };
 
-        // ОТПРАВКА В TELEGRAM (ИСПРАВЛЕНО)
-        function submitOrderToTelegram() {
+        // ОТПРАВКА ЗАКАЗА В TELEGRAM + ОБНОВЛЕНИЕ FIREBASE
+        window.submitOrderToTelegram = async function() {
             const strength = strengthLabels[document.getElementById('strength-slider').value];
             const flavor = document.getElementById('flavor-input').value || "На усмотрение мастера";
             const comment = document.getElementById('comment-input').value.trim();
@@ -356,50 +386,57 @@
             const waLink = `https://wa.me/${cleanPhone}?text=Салам! Ваш заказ на тариф ${currentOrderTariff} принят. Мастер выезжает!`;
 
             const replyMarkup = {
-                inline_keyboard: [
-                    [{ text: "✅ ПРИНЯТЬ И НАПИСАТЬ В WA", url: waLink }]
-                ]
+                inline_keyboard: [[{ text: "✅ ПРИНЯТЬ И НАПИСАТЬ В WA", url: waLink }]]
             };
 
             const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
             
-            // Используем fetch и игнорируем ошибку CORS для плавной работы UI
+            // Отправляем в телегу (ошибку CORS игнорим)
             fetch(url, {
                 method: 'POST', 
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, reply_markup: replyMarkup })
-            }).catch(err => console.log("Telegram API call done."));
+            }).catch(() => {});
 
-            // Имитируем моментальный успех
+            try {
+                // ОБНОВЛЯЕМ БАЗУ ДАННЫХ В FIREBASE
+                if(currentUserData) {
+                    const newTotal = (currentUserData.totalOrders || 0) + 1;
+                    const userRef = doc(db, "users", currentUserPhone);
+                    await updateDoc(userRef, {
+                        totalOrders: newTotal,
+                        activeOrder: currentOrderTariff
+                    });
+                    currentUserData.totalOrders = newTotal;
+                    currentUserData.activeOrder = currentOrderTariff;
+                }
+            } catch (e) {
+                console.error("Не удалось обновить Firebase:", e);
+            }
+
             setTimeout(() => {
                 submitBtn.innerText = "ОТПРАВИТЬ"; 
                 submitBtn.disabled = false;
-                finishOrderSuccess();
+                updateUI(); 
+                closeOrderModal(); 
+                switchTab('tab-home');
             }, 800);
-        }
-
-        function finishOrderSuccess() {
-            usersDB[currentUserPhone].totalOrders += 1;
-            usersDB[currentUserPhone].activeOrder = currentOrderTariff;
-            localStorage.setItem('damdym_users_v3', JSON.stringify(usersDB));
-            
-            updateUI(); closeOrderModal(); switchTab('tab-home');
-        }
+        };
 
         function updateUI() {
-            if(currentUserPhone) {
+            if(currentUserPhone && currentUserData) {
                 document.getElementById('nav-profile-text').innerText = 'Профиль';
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('view-register').style.display = 'none';
                 document.getElementById('view-profile').style.display = 'block';
                 
                 document.getElementById('profile-phone').innerText = currentUserPhone;
-                document.getElementById('profile-orders').innerText = usersDB[currentUserPhone].totalOrders;
+                document.getElementById('profile-orders').innerText = currentUserData.totalOrders || 0;
 
-                if (usersDB[currentUserPhone].activeOrder) {
+                if (currentUserData.activeOrder) {
                     document.getElementById('home-empty').style.display = 'none';
                     document.getElementById('home-tracker').style.display = 'block';
-                    document.getElementById('tracker-tariff').innerText = usersDB[currentUserPhone].activeOrder;
+                    document.getElementById('tracker-tariff').innerText = currentUserData.activeOrder;
                 }
             } else {
                 document.getElementById('nav-profile-text').innerText = 'Вход';
@@ -411,7 +448,22 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', updateUI);
+        // При загрузке страницы: если юзер залогинен локально, подтягиваем его свежие данные из облака
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (currentUserPhone) {
+                try {
+                    const docSnap = await getDoc(doc(db, "users", currentUserPhone));
+                    if (docSnap.exists()) {
+                        currentUserData = docSnap.data();
+                    } else {
+                        // Если в базе его удалили - разлогиниваем
+                        logout();
+                    }
+                } catch(e) { console.error("Firebase init error", e); }
+            }
+            updateUI();
+        });
+
     </script>
 </body>
 </html>
