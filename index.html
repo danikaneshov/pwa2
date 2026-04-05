@@ -5,81 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#121212">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>dám dym APP</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dirty: #dad4c7; --black: #121212; --red: #e60023; --cyan: #00e5ff;
-            --font-body: 'Montserrat', sans-serif; --font-vandal: 'Permanent Marker', cursive;
+            --bg-dirty: #f4f2ed; /* Сделал фон чуть чище, как в приложениях */
+            --black: #121212; --red: #e60023; --cyan: #00e5ff;
+            --font-body: 'Montserrat', sans-serif; 
+            --font-vandal: 'Permanent Marker', cursive;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-body); background-color: var(--bg-dirty); color: var(--black); background-image: radial-gradient(#00000015 1px, transparent 1px), radial-gradient(#00000015 1px, transparent 1px); background-size: 20px 20px; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { 
+            font-family: var(--font-body); background-color: var(--bg-dirty); color: var(--black); 
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
+            /* Легкий паттерн для стиля */
+            background-image: radial-gradient(#00000010 1px, transparent 1px); background-size: 20px 20px;
+        }
 
-        .btn { display: inline-flex; justify-content: center; align-items: center; width: 100%; font-family: var(--font-body); font-weight: 900; text-transform: uppercase; padding: 18px 20px; background: var(--cyan); color: var(--black); border: 4px solid var(--black); box-shadow: 4px 4px 0px var(--black); font-size: 1.1rem; letter-spacing: 1px; transition: 0.1s; cursor: pointer; }
-        .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+        /* --- КНОПКИ --- */
+        .btn { 
+            display: inline-flex; justify-content: center; align-items: center; width: 100%; 
+            font-family: var(--font-body); font-weight: 900; text-transform: uppercase; 
+            padding: 18px 20px; background: var(--cyan); color: var(--black); 
+            border: 3px solid var(--black); border-radius: 12px; /* Скруглил углы для App-стиля */
+            box-shadow: 0px 4px 0px var(--black); font-size: 1.1rem; letter-spacing: 1px; 
+            transition: 0.1s; cursor: pointer; 
+        }
+        .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--black); }
         .btn-red { background: var(--red); color: white; }
         .btn-black { background: var(--black); color: white; }
 
-        header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: var(--black); color: white; flex-shrink: 0; border-bottom: 4px solid var(--red); }
-        .logo { font-family: var(--font-vandal); font-size: 2rem; }
-        .status-badge { display: flex; align-items: center; gap: 6px; font-family: var(--font-vandal); font-size: 0.9rem; background: white; color: var(--black); padding: 4px 10px; border: 2px solid white; transform: rotate(2deg); }
+        /* --- ШАПКА --- */
+        header { 
+            padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; 
+            background: white; color: var(--black); flex-shrink: 0; 
+            border-bottom: 2px solid rgba(0,0,0,0.1); 
+            padding-top: calc(15px + env(safe-area-inset-top)); /* Для челки iPhone */
+        }
+        .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--black); }
+        .status-badge { 
+            display: flex; align-items: center; gap: 6px; font-family: var(--font-body); 
+            font-weight: 900; font-size: 0.8rem; background: var(--black); color: white; 
+            padding: 6px 12px; border-radius: 20px; 
+        }
         .pulse-dot { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
+        /* --- ТАБЫ И КОНТЕНТ --- */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 5vw 100px; -ms-overflow-style: none; scrollbar-width: none; }
         .app-content::-webkit-scrollbar { display: none; }
-        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .tab-pane { display: none; animation: fadeIn 0.2s ease-out; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .section-title { font-family: var(--font-body); font-weight: 900; font-size: 2rem; text-transform: uppercase; margin-bottom: 20px; display: inline-block; background: var(--black); color: white; padding: 5px 15px; transform: rotate(-1deg); }
+        
+        .section-title { 
+            font-family: var(--font-body); font-weight: 900; font-size: 1.8rem; 
+            text-transform: uppercase; margin-bottom: 20px; color: var(--black); 
+        }
 
         /* --- КАТАЛОГ --- */
-        .promo-subtitle { font-family: var(--font-body); font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: 20px; text-transform: uppercase; }
-        .app-card { background: white; border: 4px solid var(--black); padding: 15px; margin-bottom: 20px; box-shadow: 6px 6px 0 rgba(0,0,0,1); display: flex; flex-direction: column; }
-        .app-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; border-bottom: 2px dashed var(--black); padding-bottom: 10px; }
-        .app-card-title { font-family: var(--font-vandal); font-size: 2rem; }
-        .app-card-price { font-family: var(--font-vandal); font-size: 1.8rem; color: var(--red); }
-        .app-card-desc { font-weight: 800; font-size: 0.9rem; margin-bottom: 5px; line-height: 1.3; }
-        .app-card-kit { font-weight: 500; font-size: 0.8rem; color: #555; margin-bottom: 15px; line-height: 1.4; }
-        .old-price { font-family: var(--font-body); font-size: 1rem; color: #888; text-decoration: line-through; text-decoration-color: var(--black); text-decoration-thickness: 2px; margin-right: 5px; }
+        .app-card { 
+            background: white; border: 3px solid var(--black); padding: 20px; 
+            margin-bottom: 20px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); 
+            display: flex; flex-direction: column; 
+        }
+        .app-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .app-card-title { font-family: var(--font-vandal); font-size: 2.2rem; }
+        .app-card-price { font-family: var(--font-vandal); font-size: 1.8rem; color: var(--red); text-align: right; }
+        .app-card-desc { font-weight: 800; font-size: 1rem; margin-bottom: 8px; line-height: 1.3; }
+        .app-card-kit { font-weight: 500; font-size: 0.85rem; color: #666; margin-bottom: 20px; line-height: 1.4; }
+        .old-price { font-family: var(--font-body); font-size: 1.1rem; color: #999; text-decoration: line-through; text-decoration-color: var(--black); text-decoration-thickness: 2px; margin-right: 5px; display: block;}
 
         /* --- МОДАЛКА ЗАКАЗА --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(18,18,18,0.95); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
-        .modal-content { background: var(--bg-dirty); width: 100%; max-width: 600px; border-top: 6px solid var(--black); border-radius: 20px 20px 0 0; padding: 30px 5vw; animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
+        .modal-content { 
+            background: white; width: 100%; max-width: 600px; border-top: 4px solid var(--black); 
+            border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); 
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); max-height: 90vh; overflow-y: auto; 
+        }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-title { font-family: var(--font-vandal); font-size: 2.5rem; color: var(--black); margin-bottom: 20px; line-height: 1; }
-        .modal-label { font-family: var(--font-body); font-weight: 900; font-size: 1rem; margin-top: 20px; margin-bottom: 10px; display: block; text-transform: uppercase; }
-        .range-slider { width: 100%; appearance: none; height: 8px; background: var(--black); outline: none; margin-bottom: 10px; }
-        .range-slider::-webkit-slider-thumb { appearance: none; width: 25px; height: 25px; background: var(--red); border: 3px solid var(--black); border-radius: 50%; cursor: pointer; }
-        .strength-text { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); text-align: center; margin-bottom: 10px; }
-        .modal-input { width: 100%; padding: 15px; border: 4px solid var(--black); background: white; font-family: var(--font-body); font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
-        .modal-input:focus { border-color: var(--cyan); }
-        .ice-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .ice-btn { flex: 1; padding: 15px; border: 4px solid var(--black); background: white; font-weight: 900; text-align: center; cursor: pointer; transition: 0.2s; }
-        .ice-btn.active { background: var(--cyan); color: var(--black); transform: translateY(-2px); box-shadow: 4px 4px 0 var(--black); }
-
-        /* --- ГЛАВНАЯ (СТАТУС И ЛОЯЛЬНОСТЬ) --- */
-        .tracker-card { border: 4px solid var(--black); background: white; padding: 20px; margin-bottom: 25px; box-shadow: 6px 6px 0 var(--black); display: none; text-align: center; }
-        .tracker-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 15px; color: var(--red); }
-        .tracker-status { font-family: var(--font-vandal); font-size: 2.2rem; color: var(--black); margin: 15px 0; }
         
-        .loyalty-card { border: 4px solid var(--black); background: var(--black); color: white; padding: 20px; box-shadow: 6px 6px 0 var(--red); margin-bottom: 20px; }
-        .stamps { display: flex; justify-content: space-between; margin-top: 20px; }
-        .stamp { width: 45px; height: 45px; border: 3px dashed white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-vandal); font-size: 1.5rem; color: #555; }
-        .stamp.earned { background: var(--red); border-style: solid; color: white; border-color: var(--red); transform: scale(1.1) rotate(5deg); }
+        .modal-title { font-family: var(--font-body); font-weight: 900; font-size: 2rem; color: var(--black); margin-bottom: 5px; text-transform: uppercase; }
+        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); margin-bottom: 20px; }
+        
+        .modal-label { font-family: var(--font-body); font-weight: 900; font-size: 0.9rem; margin-top: 25px; margin-bottom: 10px; display: block; color: #555; text-transform: uppercase; }
+        
+        .range-slider { width: 100%; appearance: none; height: 10px; background: #eee; border-radius: 5px; outline: none; margin-bottom: 10px; border: 2px solid var(--black); }
+        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--red); border: 3px solid var(--black); border-radius: 50%; cursor: pointer; }
+        .strength-text { font-family: var(--font-body); font-weight: 900; font-size: 1.2rem; color: var(--black); text-align: center; margin-bottom: 10px; text-transform: uppercase; }
+        
+        .modal-input { width: 100%; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: #fafafa; font-family: var(--font-body); font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .modal-input:focus { border-color: var(--red); background: white; }
+        
+        .ice-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
+        .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--black); border-radius: 12px; background: white; font-weight: 900; text-align: center; cursor: pointer; transition: 0.2s; color: #888; }
+        .ice-btn.active { background: var(--cyan); color: var(--black); border-color: var(--black); }
+
+        /* --- ГЛАВНАЯ (СТАТУС ЗАКАЗА) --- */
+        .tracker-card { background: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; box-shadow: 0px 6px 0px rgba(0,0,0,1); display: none; text-align: center; }
+        .tracker-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; color: var(--red); text-transform: uppercase; }
+        .tracker-tariff { font-family: var(--font-vandal); font-size: 2rem; margin-bottom: 20px; }
+        .tracker-status { font-family: var(--font-body); font-weight: 900; font-size: 1.5rem; color: var(--black); margin: 15px 0; background: #eee; padding: 10px; border-radius: 8px; border: 2px dashed #ccc;}
+        
+        .profile-card { background: var(--black); color: white; border: 3px solid var(--black); padding: 25px; border-radius: 16px; margin-bottom: 20px; }
 
         /* --- АВТОРИЗАЦИЯ --- */
-        .auth-box { border: 4px solid var(--black); background: white; padding: 25px 20px; box-shadow: 6px 6px 0 var(--black); text-align: center; }
-        .auth-input { width: 100%; font-family: var(--font-body); font-weight: 800; font-size: 1.2rem; padding: 15px; border: 4px solid var(--black); margin-bottom: 15px; text-align: center; outline: none; background: var(--bg-dirty); }
-        .auth-switch { margin-top: 20px; font-weight: 800; color: #555; text-decoration: underline; cursor: pointer; }
+        .auth-box { background: white; border: 3px solid var(--black); padding: 30px 20px; border-radius: 16px; box-shadow: 0px 6px 0px var(--black); text-align: center; }
+        .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
 
-        /* --- BOTTOM NAV --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 4px solid var(--black); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: #888; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
-        .nav-icon { font-size: 1.8rem; margin-bottom: 4px; filter: grayscale(100%); transition: 0.2s; }
+        /* --- BOTTOM NAV С SVG ИКОНКАМИ --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; background: white; 
+            border-top: 2px solid rgba(0,0,0,0.1); display: flex; justify-content: space-around; 
+            padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; 
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: #aaa; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; transition: 0.2s; }
         .nav-item.active { color: var(--red); }
-        .nav-item.active .nav-icon { filter: grayscale(0%); transform: scale(1.1); }
+        .nav-item.active .nav-icon { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -94,97 +139,104 @@
         <div id="tab-home" class="tab-pane active">
             <h2 class="section-title">ТВОЙ ДЫМ</h2>
             
-            <div id="home-empty" style="text-align: center; padding: 40px 20px; border: 4px dashed var(--black); font-weight: 800;">
+            <div id="home-empty" style="text-align: center; padding: 50px 20px; background: white; border: 3px dashed #ccc; border-radius: 16px; font-weight: 800; color: #888;">
+                <svg style="width: 50px; height: 50px; fill: #ccc; margin-bottom: 15px;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.64-2.25 1.64-1.74 0-2.1-.96-2.11-1.66H8.1c.02 1.83 1.35 2.94 2.8 3.33V20h2.4v-1.64c1.64-.32 2.8-1.45 2.8-2.97 0-2.02-1.62-2.88-3.79-3.39z"/></svg>
                 <p>Выбери аппарат в Арсенале, и здесь появится статус твоего заказа.</p>
-                <button class="btn btn-red" style="margin-top: 20px;" onclick="switchTab('tab-store')">В АРСЕНАЛ</button>
+                <button class="btn btn-red" style="margin-top: 25px;" onclick="switchTab('tab-store')">В АРСЕНАЛ</button>
             </div>
 
             <div id="home-tracker" class="tracker-card">
-                <div class="tracker-title">ЗАКАЗ ОТПРАВЛЕН 🔥</div>
-                <div style="font-weight: 800;" id="tracker-tariff">Тариф: ...</div>
-                <div class="tracker-status">ЖДИ ЗВОНКА ИЛИ СООБЩЕНИЯ В WA</div>
-                <p style="font-size: 0.9rem; font-weight: 800; color: #444;">Мастер уже принял заявку и скоро свяжется с тобой для подтверждения.</p>
+                <div class="tracker-title">ЗАКАЗ ОТПРАВЛЕН</div>
+                <div class="tracker-tariff" id="tracker-tariff">...</div>
+                <div style="font-weight: 800; font-size: 0.9rem; color: #555; text-transform: uppercase;">Статус:</div>
+                <div class="tracker-status">ОЖИДАЕТ ПОДТВЕРЖДЕНИЯ</div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #888; margin-top: 15px;">Мастер принял заявку. Если мы не перезвоним через 5 минут, напиши нам в WA.</p>
             </div>
         </div>
 
         <div id="tab-store" class="tab-pane">
             <h2 class="section-title">АРСЕНАЛ</h2>
-            <p class="promo-subtitle">🔥 СКИДКА -20% НА ПЕРВЫЙ МЕСЯЦ!</p>
             
             <div class="app-card">
-                <div class="app-card-header"><span class="app-card-title">SOLO</span><span class="app-card-price"><span class="old-price">8 750</span> 7 000 ₸</span></div>
+                <div class="app-card-header">
+                    <span class="app-card-title">SOLO</span>
+                    <span class="app-card-price"><span class="old-price">8 750</span>7 000 ₸</span>
+                </div>
                 <p class="app-card-desc">Отличный выбор для одного или в паре.</p>
                 <p class="app-card-kit">1 аппарат, 1 забивка, 4 угля, плитка, щипцы.</p>
                 <button class="btn btn-black" onclick="openOrderModal('SOLO', '7 000')">НАСТРОИТЬ ЗАКАЗ</button>
             </div>
 
             <div class="app-card">
-                <div class="app-card-header"><span class="app-card-title">DOUBLE</span><span class="app-card-price"><span class="old-price">11 250</span> 9 000 ₸</span></div>
+                <div class="app-card-header">
+                    <span class="app-card-title">DOUBLE</span>
+                    <span class="app-card-price"><span class="old-price">11 250</span>9 000 ₸</span>
+                </div>
                 <p class="app-card-desc">Две забивки — выгоднее, чем докупать!</p>
                 <p class="app-card-kit">1 аппарат, 2 забивки, 8 углей, плитка, щипцы.</p>
                 <button class="btn btn-red" onclick="openOrderModal('DOUBLE', '9 000')">НАСТРОИТЬ ЗАКАЗ</button>
             </div>
 
             <div class="app-card">
-                <div class="app-card-header"><span class="app-card-title">COMPANY</span><span class="app-card-price"><span class="old-price">20 000</span> 16 000 ₸</span></div>
+                <div class="app-card-header">
+                    <span class="app-card-title">COMPANY</span>
+                    <span class="app-card-price"><span class="old-price">20 000</span>16 000 ₸</span>
+                </div>
                 <p class="app-card-desc">Идеально для тусовки с друзьями.</p>
                 <p class="app-card-kit">2 аппарата, 4 забивки, 16 углей, 2 плитки.</p>
                 <button class="btn btn-cyan" onclick="openOrderModal('COMPANY', '16 000')">НАСТРОИТЬ ЗАКАЗ</button>
-            </div>
-            
-            <div class="app-card">
-                <div class="app-card-header"><span class="app-card-title">MASTER</span><span style="font-family: var(--font-body); font-weight: 900; font-size: 1.1rem;">ИНДИВИДУАЛЬНО</span></div>
-                <p class="app-card-desc">Кейтеринг на вашем празднике или дне рождении.</p>
-                <p class="app-card-kit">Выезд мастера с оборудованием, контроль жара.</p>
-                <a href="https://wa.me/77000000000?text=Салам! Интересует кейтеринг." target="_blank" class="btn btn-black">В WHATSAPP</a>
             </div>
         </div>
 
         <div id="tab-profile" class="tab-pane">
             <div id="view-login" class="auth-box">
-                <h2 class="section-title" style="margin-bottom: 20px;">ВХОД</h2>
-                <input type="tel" class="auth-input" id="login-phone" placeholder="Твой номер: 7700...">
-                <input type="password" class="auth-input" id="login-pass" placeholder="Пароль">
+                <h2 class="section-title" style="margin-bottom: 25px;">ВХОД</h2>
+                <input type="tel" class="modal-input" id="login-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
+                <input type="password" class="modal-input" id="login-pass" placeholder="Пароль" style="text-align: center;">
                 <button class="btn btn-red" onclick="login()">ВОЙТИ</button>
                 <div class="auth-switch" onclick="toggleAuth('register')">Создать аккаунт</div>
             </div>
 
             <div id="view-register" class="auth-box" style="display: none;">
-                <h2 class="section-title" style="margin-bottom: 20px;">РЕГИСТРАЦИЯ</h2>
-                <input type="tel" class="auth-input" id="reg-phone" placeholder="Твой номер: 7700...">
-                <input type="password" class="auth-input" id="reg-pass" placeholder="Придумай пароль">
-                <button class="btn btn-black" onclick="register()">СТАТЬ СВОИМ</button>
+                <h2 class="section-title" style="margin-bottom: 25px;">РЕГИСТРАЦИЯ</h2>
+                <input type="tel" class="modal-input" id="reg-phone" placeholder="Твой номер: 7700..." style="text-align: center;">
+                <input type="password" class="modal-input" id="reg-pass" placeholder="Придумай пароль" style="text-align: center;">
+                <button class="btn btn-black" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
                 <div class="auth-switch" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</div>
             </div>
 
             <div id="view-profile" style="display: none;">
-                <h2 class="section-title">ТВОЙ ПРОФИЛЬ</h2>
-                <div class="loyalty-card">
-                    <div class="loyalty-title">ПАСПОРТ</div>
-                    <div style="font-family: var(--font-vandal); font-size: 1.5rem; color: var(--cyan);" id="profile-phone">...</div>
-                    <p style="font-weight: 800; margin-top: 10px;">Копи печати! 5-й заказ — за наш счет.</p>
-                    <div class="stamps" id="stamps-container"></div>
+                <h2 class="section-title">ПРОФИЛЬ</h2>
+                <div class="profile-card">
+                    <p style="font-weight: 800; color: #aaa; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px;">Твой номер</p>
+                    <div style="font-family: var(--font-vandal); font-size: 2rem; color: var(--cyan);" id="profile-phone">...</div>
+                    
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px dashed #444;">
+                        <p style="font-weight: 800; color: #aaa; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px;">Всего заказов</p>
+                        <div style="font-family: var(--font-vandal); font-size: 2.5rem; color: white;" id="profile-orders">0</div>
+                    </div>
                 </div>
-                <button class="btn" style="background: transparent; color: var(--black);" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
+                <button class="btn" style="background: transparent; color: var(--black); border-color: #ccc; box-shadow: none;" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="order-modal">
         <div class="modal-content">
-            <h2 class="modal-title">НАСТРОЙКА<br><span id="modal-tariff-name" style="color: var(--red);">...</span></h2>
+            <h2 class="modal-title">НАСТРОЙКА</h2>
+            <div class="modal-subtitle" id="modal-tariff-name">...</div>
             
             <label class="modal-label">КРЕПОСТЬ (0-10)</label>
             <input type="range" min="0" max="10" value="5" class="range-slider" id="strength-slider">
-            <div class="strength-text" id="strength-display">СРЕДНИЙ (5)</div>
+            <div class="strength-text" id="strength-display">СРЕДНИЙ</div>
 
             <label class="modal-label">ВКУСОВЫЕ ПРЕДПОЧТЕНИЯ</label>
-            <input type="text" class="modal-input" id="flavor-input" placeholder="Например: Ягодный, Цитрус, Десерт...">
+            <input type="text" class="modal-input" id="flavor-input" placeholder="Ягодный, Цитрус, Выпечка...">
 
-            <label class="modal-label">ХОЛОДОК 🧊</label>
+            <label class="modal-label">ХОЛОДОК</label>
             <div class="ice-toggle">
-                <div class="ice-btn active" onclick="setIce(true)" id="ice-yes">ДА</div>
-                <div class="ice-btn" onclick="setIce(false)" id="ice-no">НЕТ</div>
+                <div class="ice-btn active" onclick="setIce(true)" id="ice-yes">С ХОЛОДКОМ</div>
+                <div class="ice-btn" onclick="setIce(false)" id="ice-no">БЕЗ ХОЛОДКА</div>
             </div>
 
             <label class="modal-label">АДРЕС И КОММЕНТАРИЙ</label>
@@ -198,23 +250,32 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')"><span class="nav-icon">🔥</span><span>Главная</span></div>
-        <div class="nav-item" id="nav-store" onclick="switchTab('tab-store')"><span class="nav-icon">💨</span><span>Арсенал</span></div>
-        <div class="nav-item" id="nav-profile" onclick="switchTab('tab-profile')"><span class="nav-icon">👤</span><span id="nav-profile-text">Вход</span></div>
+        <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Главная</span>
+        </div>
+        <div class="nav-item" id="nav-store" onclick="switchTab('tab-store')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+            <span>Каталог</span>
+        </div>
+        <div class="nav-item" id="nav-profile" onclick="switchTab('tab-profile')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span id="nav-profile-text">Вход</span>
+        </div>
     </nav>
 
     <script>
         // ==========================================
-        // НАСТРОЙКИ TELEGRAM БОТА 
+        // НАСТРОЙКИ TELEGRAM БОТА
         // ==========================================
         const TG_BOT_TOKEN = "8616525461:AAGTwex70ZkIQMwbBikG9msSG6dY0ErEDKg";
         const TG_CHAT_ID = "7711813441";
         // ==========================================
 
-        let usersDB = JSON.parse(localStorage.getItem('damdym_users_v2')) || {};
+        let usersDB = JSON.parse(localStorage.getItem('damdym_users_v3')) || {};
         let currentUserPhone = localStorage.getItem('damdym_current_user') || null;
 
-        // UI Логика табов
+        // UI Табы
         function switchTab(tabId) {
             document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -228,19 +289,18 @@
             document.getElementById('view-register').style.display = type === 'register' ? 'block' : 'none';
         }
 
-        // АВТОРИЗАЦИЯ (Локальная)
+        // АВТОРИЗАЦИЯ
         function register() {
             const phone = document.getElementById('reg-phone').value.trim();
             const pass = document.getElementById('reg-pass').value.trim();
             if(phone.length < 5 || pass.length < 3) return alert('Введи нормальный номер и пароль!');
             if(usersDB[phone]) return alert('Этот номер уже зарегистрирован. Войди в аккаунт.');
 
-            usersDB[phone] = { password: pass, stamps: 0, activeOrder: null };
-            localStorage.setItem('damdym_users_v2', JSON.stringify(usersDB));
+            usersDB[phone] = { password: pass, totalOrders: 0, activeOrder: null };
+            localStorage.setItem('damdym_users_v3', JSON.stringify(usersDB));
             
             currentUserPhone = phone;
             localStorage.setItem('damdym_current_user', phone);
-            alert('Добро пожаловать в клуб!');
             updateUI(); switchTab('tab-store');
         }
 
@@ -261,7 +321,7 @@
             updateUI(); switchTab('tab-profile');
         }
 
-        // МОДАЛКА И ПОЛЗУНОК
+        // МОДАЛКА
         let currentOrderTariff = "", currentOrderPrice = "", hasIce = true;
         const strengthLabels = { 0:"ЛЕГКИЙ (0)", 1:"ЛЕГКИЙ (1)", 2:"ЛЕГКИЙ (2)", 3:"НИЖЕ СРЕДНЕГО (3)", 4:"НИЖЕ СРЕДНЕГО (4)", 5:"СРЕДНИЙ (5)", 6:"СРЕДНИЙ (6)", 7:"ВЫШЕ СРЕДНЕГО (7)", 8:"ВЫШЕ СРЕДНЕГО (8)", 9:"КРЕПКИЙ (9)", 10:"КРЕПКИЙ (10)" };
 
@@ -276,72 +336,60 @@
         }
 
         function openOrderModal(tariff, price) {
-            if (!currentUserPhone) return alert('Сначала войди в аккаунт, чтобы копить печати!'), switchTab('tab-profile');
+            if (!currentUserPhone) return alert('Сначала войди в профиль!'), switchTab('tab-profile');
             currentOrderTariff = tariff; currentOrderPrice = price;
             document.getElementById('modal-tariff-name').innerText = tariff;
             document.getElementById('order-modal').style.display = 'flex';
         }
         function closeOrderModal() { document.getElementById('order-modal').style.display = 'none'; }
 
-        // ОТПРАВКА ЗАКАЗА В TELEGRAM
+        // ОТПРАВКА В TELEGRAM
         async function submitOrderToTelegram() {
             const strength = strengthLabels[document.getElementById('strength-slider').value];
             const flavor = document.getElementById('flavor-input').value || "На усмотрение мастера";
             const comment = document.getElementById('comment-input').value.trim();
             const iceText = hasIce ? "Да 🧊" : "Нет ❌";
 
-            if (!comment) return alert("Брат, напиши адрес в комментарии, куда везти?");
+            if (!comment) return alert("Обязательно напиши адрес в комментарии!");
 
             const submitBtn = document.getElementById('submit-btn');
-            submitBtn.innerText = "ОТПРАВЛЯЕМ...";
-            submitBtn.disabled = true;
+            submitBtn.innerText = "ОТПРАВЛЯЕМ..."; submitBtn.disabled = true;
 
-            // Формируем текст для тебя в Телеграм
             const text = `🔥 НОВЫЙ ЗАКАЗ: ${currentOrderTariff}\n\n💨 Цена: ${currentOrderPrice} ₸\n💪 Крепость: ${strength}\n🍓 Вкус: ${flavor}\n🧊 Холодок: ${iceText}\n📍 Адрес/Коммент: ${comment}\n\n📱 Клиент: ${currentUserPhone}`;
-            
-            // Ссылка для быстрой связи в WA (только цифры из номера)
             const cleanPhone = currentUserPhone.replace(/\D/g, '');
             const waLink = `https://wa.me/${cleanPhone}?text=Салам! Ваш заказ на тариф ${currentOrderTariff} принят. Мастер выезжает!`;
 
-            const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
-            const payload = {
-                chat_id: TG_CHAT_ID,
-                text: text,
-                reply_markup: {
-                    inline_keyboard: [[{ text: "📲 ПРИНЯТЬ И НАПИСАТЬ В WA", url: waLink }]]
-                }
+            // Inline-кнопки статусов для Telegram
+            const replyMarkup = {
+                inline_keyboard: [
+                    [{ text: "✅ ПРИНЯТЬ И НАПИСАТЬ В WA", url: waLink }],
+                    [
+                        { text: "📦 Сборка", callback_data: "status_accepted" },
+                        { text: "🚗 Курьер", callback_data: "status_delivery" },
+                        { text: "🏁 Завершен", callback_data: "status_done" }
+                    ]
+                ]
             };
 
+            const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
             try {
                 const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, reply_markup: replyMarkup })
                 });
 
-                if (response.ok) {
-                    finishOrderSuccess();
-                } else {
-                    alert("Ошибка отправки в Телеграм. Проверь настройки бота.");
-                }
-            } catch (err) {
-                alert("Ошибка сети! Проверь интернет.");
-            } finally {
-                submitBtn.innerText = "ОТПРАВИТЬ";
-                submitBtn.disabled = false;
-            }
+                if (response.ok) finishOrderSuccess();
+                else alert("Ошибка отправки в Телеграм.");
+            } catch (err) { alert("Ошибка сети!"); } 
+            finally { submitBtn.innerText = "ОТПРАВИТЬ"; submitBtn.disabled = false; }
         }
 
         function finishOrderSuccess() {
-            // Начисляем печать
-            usersDB[currentUserPhone].stamps += 1;
-            if(usersDB[currentUserPhone].stamps > 5) usersDB[currentUserPhone].stamps = 1;
+            usersDB[currentUserPhone].totalOrders += 1;
             usersDB[currentUserPhone].activeOrder = currentOrderTariff;
-            localStorage.setItem('damdym_users_v2', JSON.stringify(usersDB));
+            localStorage.setItem('damdym_users_v3', JSON.stringify(usersDB));
             
-            updateUI();
-            closeOrderModal();
-            switchTab('tab-home');
+            updateUI(); closeOrderModal(); switchTab('tab-home');
         }
 
         function updateUI() {
@@ -350,21 +398,14 @@
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('view-register').style.display = 'none';
                 document.getElementById('view-profile').style.display = 'block';
+                
                 document.getElementById('profile-phone').innerText = currentUserPhone;
+                document.getElementById('profile-orders').innerText = usersDB[currentUserPhone].totalOrders;
 
-                let user = usersDB[currentUserPhone];
-                let s = '';
-                for(let i=1; i<=5; i++) {
-                    if(i <= user.stamps) s += `<div class="stamp earned">X</div>`;
-                    else if (i === 5) s += `<div class="stamp" style="border-color: var(--cyan); color: var(--cyan);">FREE</div>`;
-                    else s += `<div class="stamp">${i}</div>`;
-                }
-                document.getElementById('stamps-container').innerHTML = s;
-
-                if (user.activeOrder) {
+                if (usersDB[currentUserPhone].activeOrder) {
                     document.getElementById('home-empty').style.display = 'none';
                     document.getElementById('home-tracker').style.display = 'block';
-                    document.getElementById('tracker-tariff').innerText = "Тариф: " + user.activeOrder;
+                    document.getElementById('tracker-tariff').innerText = usersDB[currentUserPhone].activeOrder;
                 }
             } else {
                 document.getElementById('nav-profile-text').innerText = 'Вход';
