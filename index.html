@@ -5,30 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#121212">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>dám dym APP</title>
+    <title>VKASANIE APP</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #e60023; --cyan: #00e5ff; --font-body: 'Montserrat', sans-serif; --font-vandal: 'Permanent Marker', cursive; }
-        [data-theme="light"] { --bg-main: #f4f2ed; --bg-card: #ffffff; --text-main: #121212; --text-muted: #555; --border-color: #121212; --input-bg: #fafafa; --nav-bg: #ffffff; }
-        [data-theme="dark"] { --bg-main: #121212; --bg-card: #1e1e1e; --text-main: #ffffff; --text-muted: #aaa; --border-color: #444; --input-bg: #2a2a2a; --nav-bg: #1e1e1e; }
+        :root { 
+            --font-body: 'Montserrat', sans-serif; 
+            --font-vandal: 'Permanent Marker', cursive; 
+        }
+        
+        /* ЧЕРНО-БЕЛАЯ ПАЛИТРА */
+        [data-theme="light"] { 
+            --bg-main: #f4f4f4; --bg-card: #ffffff; 
+            --text-main: #000000; --text-muted: #777777; 
+            --border-color: #000000; --input-bg: #f9f9f9; --nav-bg: #ffffff; 
+            --accent: #000000; --accent-text: #ffffff; --secondary: #e0e0e0;
+        }
+        [data-theme="dark"] { 
+            --bg-main: #121212; --bg-card: #1e1e1e; 
+            --text-main: #ffffff; --text-muted: #aaaaaa; 
+            --border-color: #ffffff; --input-bg: #2a2a2a; --nav-bg: #1e1e1e; 
+            --accent: #ffffff; --accent-text: #000000; --secondary: #333333;
+        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--font-body); background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; transition: 0.3s; }
 
+        /* КНОПКИ В СТАРОЙ ФОРМЕ, НО НОВОМ ЦВЕТЕ */
         .btn { display: inline-flex; justify-content: center; align-items: center; width: 100%; font-family: var(--font-body); font-weight: 900; text-transform: uppercase; padding: 18px 20px; border: 3px solid var(--border-color); border-radius: 12px; box-shadow: 0px 4px 0px var(--border-color); font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
         .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border-color); }
-        .btn-cyan { background: var(--cyan); color: #121212; }
-        .btn-red { background: var(--red); color: white; border-color: var(--red); box-shadow: 0px 4px 0px #800013;}
+        .btn-cyan { background: var(--secondary); color: var(--text-main); }
+        .btn-red { background: var(--accent); color: var(--accent-text); border-color: var(--accent); box-shadow: 0px 4px 0px var(--text-muted);}
         .btn-black { background: var(--text-main); color: var(--bg-main); }
-        .btn-outline { background: transparent; color: var(--red); border-color: var(--red); box-shadow: none; margin-top: 15px; }
+        .btn-outline { background: transparent; color: var(--text-main); border-color: var(--text-main); box-shadow: none; margin-top: 15px; }
 
         header { padding: 15px 5vw; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border-bottom: 2px solid var(--border-color); padding-top: calc(15px + env(safe-area-inset-top)); transition: 0.3s; }
         .logo { font-family: var(--font-vandal); font-size: 2rem; color: var(--text-main); }
         .header-controls { display: flex; gap: 15px; align-items: center; }
         .theme-toggle { cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-main); }
         .status-badge { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.8rem; background: var(--text-main); color: var(--bg-main); padding: 6px 12px; border-radius: 20px; }
-        .pulse-dot { display: inline-block; width: 8px; height: 8px; background-color: #00ff00; border-radius: 50%; animation: blinker 1.5s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        .pulse-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--bg-main); border-radius: 50%; animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
 
         .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 5vw 100px; -ms-overflow-style: none; scrollbar-width: none; }
         .app-content::-webkit-scrollbar { display: none; }
@@ -41,64 +57,62 @@
         .app-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 20px; margin-bottom: 20px; border-radius: 16px; transition: 0.3s;}
         .app-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .app-card-title { font-family: var(--font-vandal); font-size: 2.2rem; }
-        .app-card-price { font-family: var(--font-body); font-weight: 900; font-size: 1.5rem; color: var(--red); text-align: right; }
+        .app-card-price { font-family: var(--font-body); font-weight: 900; font-size: 1.5rem; color: var(--text-main); text-align: right; }
         .app-card-desc { font-weight: 800; font-size: 1rem; margin-bottom: 8px; line-height: 1.3; }
         .app-card-kit { font-weight: 500; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4; }
         
         .price-wrapper { display: flex; flex-direction: column; align-items: flex-end; }
         .old-price { font-family: var(--font-body); font-size: 1rem; color: var(--text-muted); text-decoration: line-through; font-weight: 900; display: none; }
-        .discount-badge { font-family: var(--font-body); background: var(--cyan); color: #121212; font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none; text-transform: uppercase;}
+        .discount-badge { font-family: var(--font-body); background: var(--text-main); color: var(--bg-main); font-size: 0.75rem; padding: 3px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 2px; display: none; text-transform: uppercase;}
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; justify-content: center; align-items: flex-end; }
         .modal-content { background: var(--bg-card); width: 100%; max-width: 600px; border-top: 4px solid var(--border-color); border-radius: 24px 24px 0 0; padding: 30px 5vw calc(30px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
         .modal-title { font-weight: 900; font-size: 2rem; margin-bottom: 5px; text-transform: uppercase; }
-        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--red); margin-bottom: 15px; }
+        .modal-subtitle { font-family: var(--font-vandal); font-size: 1.5rem; color: var(--text-main); margin-bottom: 15px; }
         
         .bowl-tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
         .bowl-tab { flex: 1; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-vandal); font-size: 1.5rem; border: 3px solid var(--border-color); border-radius: 12px; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
-        .bowl-tab.active { background: var(--red); color: white; border-color: var(--red); transform: translateY(-3px); box-shadow: 0 4px 0 var(--border-color); }
+        .bowl-tab.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 4px 0 var(--text-muted); }
 
         .modal-label { font-weight: 900; font-size: 0.9rem; margin-top: 20px; margin-bottom: 10px; display: block; color: var(--text-muted); }
         .range-slider { width: 100%; appearance: none; height: 10px; background: var(--border-color); border-radius: 5px; outline: none; margin-bottom: 10px; }
-        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--red); border: 3px solid var(--bg-card); border-radius: 50%; cursor: pointer; }
+        .range-slider::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--accent); border: 3px solid var(--bg-card); border-radius: 50%; cursor: pointer; }
         .strength-text { font-weight: 900; font-size: 1.2rem; text-align: center; margin-bottom: 10px; }
         
         .modal-input { width: 100%; padding: 15px; border: 3px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: var(--font-body); font-weight: 700; font-size: 1rem; margin-bottom: 15px; outline: none; }
         .ice-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
         .ice-btn { flex: 1; padding: 15px; border: 3px solid var(--border-color); border-radius: 12px; background: var(--input-bg); font-weight: 900; text-align: center; cursor: pointer; color: var(--text-muted); }
-        .ice-btn.active { background: var(--cyan); color: #121212; border-color: var(--border-color); }
+        .ice-btn.active { background: var(--text-main); color: var(--bg-main); border-color: var(--border-color); }
 
         .tracker-card { background: var(--bg-card); border: 3px solid var(--border-color); padding: 25px; border-radius: 16px; display: none; text-align: center; margin-bottom: 20px;}
         .tracker-status { font-weight: 900; font-size: 1.3rem; margin: 15px 0; background: var(--input-bg); padding: 15px; border-radius: 8px; border: 2px dashed var(--border-color);}
         
         .auth-box { background: var(--bg-card); border: 3px solid var(--border-color); padding: 30px 20px; border-radius: 16px; text-align: center; margin-bottom: 20px;}
-        .auth-switch { margin-top: 20px; font-weight: 800; color: var(--red); text-decoration: underline; cursor: pointer; }
+        .auth-switch { margin-top: 20px; font-weight: 800; color: var(--text-main); text-decoration: underline; cursor: pointer; }
         
-        /* Чекбокс 21+ */
         .checkbox-label { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; font-size: 0.8rem; text-align: left; margin-bottom: 20px; cursor: pointer; color: var(--text-muted); line-height: 1.4;}
-        .checkbox-label input { margin-top: 3px; transform: scale(1.3); accent-color: var(--red); flex-shrink: 0;}
+        .checkbox-label input { margin-top: 3px; transform: scale(1.3); accent-color: var(--text-main); flex-shrink: 0;}
 
-        /* Баннер PWA */
         .pwa-banner { background: var(--bg-card); border: 3px dashed var(--border-color); padding: 20px; border-radius: 16px; text-align: left; margin-bottom: 20px;}
         .pwa-banner h3 { font-weight: 900; font-size: 1.1rem; color: var(--text-main); margin-bottom: 10px; text-transform: uppercase; }
         .pwa-banner p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; font-weight: 700; }
         .pwa-step { font-size: 0.85rem; background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 8px; font-weight: 800; color: var(--text-main); border: 2px solid var(--border-color); display: flex; align-items: center; gap: 8px;}
 
         .loyalty-progress-bg { background: var(--border-color); height: 15px; border-radius: 10px; margin-top: 15px; overflow: hidden; }
-        .loyalty-progress-fill { background: var(--cyan); height: 100%; width: 0%; transition: 0.5s; }
+        .loyalty-progress-fill { background: var(--text-main); height: 100%; width: 0%; transition: 0.5s; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg); border-top: 2px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; transition: 0.3s;}
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 33%; color: var(--text-muted); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .nav-icon { width: 28px; height: 28px; margin-bottom: 4px; fill: currentColor; }
-        .nav-item.active { color: var(--red); }
+        .nav-item.active { color: var(--text-main); }
     </style>
 </head>
 <body data-theme="light">
 
     <header>
-        <div class="logo">dám dym</div>
+        <div class="logo">VKASANIE</div>
         <div class="header-controls">
             <div class="theme-toggle" onclick="toggleTheme()" id="theme-btn"></div>
             <div class="status-badge"><span class="pulse-dot"></span> 24/7</div>
@@ -115,7 +129,7 @@
             </div>
 
             <div id="home-tracker" class="tracker-card">
-                <div style="font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: 10px;">АКТИВНЫЙ ЗАКАЗ</div>
+                <div style="font-weight: 900; font-size: 1.2rem; color: var(--text-main); margin-bottom: 10px;">АКТИВНЫЙ ЗАКАЗ</div>
                 <div style="font-family: var(--font-vandal); font-size: 2rem; margin-bottom: 20px;" id="tracker-tariff">...</div>
                 <div class="tracker-status" id="tracker-status-text">ОБРАБОТКА...</div>
                 <button class="btn btn-outline" id="btn-cancel-order" onclick="cancelOrder()" style="display: none;">ОТМЕНИТЬ ЗАКАЗ</button>
@@ -197,16 +211,16 @@
                 <h2 class="section-title">ПРОФИЛЬ</h2>
                 <div class="app-card" style="background: var(--text-main); color: var(--bg-main);">
                     <p style="font-weight: 800; font-size: 1.2rem; margin-bottom: 5px; text-transform: uppercase;" id="profile-name">Имя</p>
-                    <div style="font-family: var(--font-vandal); font-size: 1.5rem; color: var(--cyan); margin-bottom: 20px;" id="profile-phone">...</div>
+                    <div style="font-family: var(--font-vandal); font-size: 1.5rem; color: var(--bg-main); margin-bottom: 20px; text-shadow: 1px 1px 0 var(--text-main);" id="profile-phone">...</div>
                     
                     <div style="border-top: 2px dashed var(--bg-main); padding-top: 15px;">
                         <p style="font-weight: 800; font-size: 0.9rem;">СИСТЕМА ЛОЯЛЬНОСТИ</p>
                         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;">
                             <span style="font-size: 1.2rem; font-weight: 900;" id="profile-spent">0 ₸</span>
-                            <span style="font-size: 1.2rem; font-weight: 900; color: var(--red); font-family: var(--font-body);" id="profile-discount-text">0% СКИДКА</span>
+                            <span style="font-size: 1.2rem; font-weight: 900; color: var(--text-main); background: var(--bg-main); padding: 2px 6px; border-radius: 4px; font-family: var(--font-body);" id="profile-discount-text">0% СКИДКА</span>
                         </div>
-                        <div class="loyalty-progress-bg">
-                            <div class="loyalty-progress-fill" id="loyalty-bar"></div>
+                        <div class="loyalty-progress-bg" style="background: var(--text-muted);">
+                            <div class="loyalty-progress-fill" id="loyalty-bar" style="background: var(--bg-main);"></div>
                         </div>
                         <p style="font-size: 0.75rem; margin-top: 5px; font-weight: 700; opacity: 0.7;" id="loyalty-next">До следующей скидки: 75 000 ₸</p>
                     </div>
@@ -215,7 +229,7 @@
             </div>
 
             <div class="pwa-banner">
-                <h3>📲 Приложение Dám Dym</h3>
+                <h3>📲 VKASANIE APP</h3>
                 <p>Добавь сервис на главный экран, чтобы заказывать в один клик и копить скидку без браузера.</p>
                 <div class="pwa-step">🍏 <b>iOS:</b> Нажми «Поделиться» ➔ «На экран Домой»</div>
                 <div class="pwa-step">🤖 <b>Android:</b> Меню (три точки) ➔ «Добавить на гл. экран»</div>
@@ -276,18 +290,18 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ИКОНКИ ТЕМЫ
+        // ИКОНКИ ТЕМЫ (Круг и квадрат для брутализма)
         const sunIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
         const moonIcon = `<svg style="width:24px;height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 
-        let currentTheme = localStorage.getItem('damdym_theme') || 'light';
+        let currentTheme = localStorage.getItem('vkasanie_theme') || 'light';
         document.body.setAttribute('data-theme', currentTheme);
         document.getElementById('theme-btn').innerHTML = currentTheme === 'light' ? moonIcon : sunIcon;
 
         window.toggleTheme = function() {
             currentTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.body.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('damdym_theme', currentTheme);
+            localStorage.setItem('vkasanie_theme', currentTheme);
             document.getElementById('theme-btn').innerHTML = currentTheme === 'light' ? moonIcon : sunIcon;
         };
 
@@ -499,7 +513,7 @@
 
                         const sMap = {'new':'ОБРАБОТКА...','accepted':'ПРИНЯТ В РАБОТУ','assembly':'СОБИРАЕМ АППАРАТ','courier':'КУРЬЕР В ПУТИ 🚗','done':'ВЫДАН ✅','canceled_client':'ОТМЕНЕН ❌', 'canceled_admin':'ОТМЕНЕН АДМИНОМ ❌'};
                         statusBox.innerText = sMap[order.status] || order.status;
-                        statusBox.style.color = (order.status === 'done') ? "green" : (order.status.includes('cancel') ? "var(--red)" : "var(--text-main)");
+                        statusBox.style.color = (order.status === 'done') ? "var(--text-main)" : (order.status.includes('cancel') ? "var(--text-main)" : "var(--text-main)");
 
                         if(['done', 'canceled_client', 'canceled_admin'].includes(order.status)) {
                             setTimeout(async () => {
